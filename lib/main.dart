@@ -14,10 +14,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      initialRoute: '/login',
+      routes: {'/': (context) => RootApp(), '/login': (context) => LoginPage()},
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
     );
   }
 }
