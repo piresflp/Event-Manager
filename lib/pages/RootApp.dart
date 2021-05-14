@@ -24,7 +24,7 @@ class _RootAppState extends State<RootApp> {
   }
 
   Widget getBody() {
-    List<Widget> pages = [YourEvents(), AddEvent(), Invites()];
+    List<Widget> pages = [Invites(), AddEvent(), YourEvents()];
 
     return IndexedStack(
       index: pageIndex,
