@@ -34,9 +34,9 @@ class _RootAppState extends State<RootApp> {
 
   Widget getFooter() {
     List bottomItems = [
+      "assets/images/Invite.svg",
       "assets/images/Add.svg",
       "assets/images/Calendar.svg",
-      "assets/images/Invite.svg",
     ];
     List textItems = ["Convites", "Criar", "Seus Eventos"];
     return Container(

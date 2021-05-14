@@ -6,3 +6,12 @@ var bgColor = Color(0xFFf0f1f3);
 var black = Color(0xFF000000);
 var textFieldColor = Colors.grey.withOpacity(0.15);
 var yellowStar = Color(0xFFfacb00);
+var blackTheme = Color(0x121212);
+var cyan = fromHex('#30b6d1');
+
+Color fromHex(String hexString) {
+  final buffer = StringBuffer();
+  if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
+  buffer.write(hexString.replaceFirst('#', ''));
+  return Color(int.parse(buffer.toString(), radix: 16));
+}
