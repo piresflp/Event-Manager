@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eventmanager/theme/colors.dart';
 import 'package:eventmanager/theme/styles.dart';
 import 'package:eventmanager/utils/Api.dart';
 import 'package:flutter/material.dart';
@@ -34,33 +35,10 @@ class Invites extends StatefulWidget {
 }
 
 class _InvitesState extends State<Invites> {
-  var _invites;
-
   void makeToast(var text) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(text),
     ));
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    getInvites();
-  }
-
-  void getInvites() async {
-    debugPrint("AAAAAAAAA");
-    FirebaseFirestore.instance
-        .collection("Convites")
-        .where('idFuncionario', isEqualTo: idUser)
-        .snapshots()
-        .listen((data) {
-      data.docs.map((e) {
-        debugPrint(e.data().toString());
-      });
-    });
   }
 
   @override
@@ -96,33 +74,71 @@ class _InvitesState extends State<Invites> {
         return Padding(
           padding: const EdgeInsets.all(30.0),
           child: Container(
-            decoration:
-                BoxDecoration(border: Border.all(color: Colors.blueAccent)),
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.blueAccent),
+                borderRadius: BorderRadius.circular(8)),
             child: Row(
               children: [
-                Padding(
-                    padding: EdgeInsets.fromLTRB(20, 10, 50, 20),
-                    child: Container(
-                      child: Column(
-                        children: [
-                          Text(evento['nome'], style: customTitle),
-                          SizedBox(height: 20),
-                          Row(
-                            children: [
-                              Text(
-                                evento['hora'],
-                                style: TextStyle(color: Colors.blueGrey),
+                Expanded(
+                  child: Padding(
+                      padding: EdgeInsets.fromLTRB(20, 10, 50, 20),
+                      child: Container(
+                        child: Column(
+                          children: [
+                            Text(evento['nome'], style: customTitle),
+                            SizedBox(height: 20),
+                            Row(
+                              children: [
+                                Text(
+                                  evento['hora'],
+                                  style: TextStyle(color: Colors.blueGrey),
+                                ),
+                                SizedBox(width: 40),
+                                Text(
+                                  evento['dia'],
+                                  style: TextStyle(color: Colors.blueGrey),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      )),
+                ),
+                Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () {},
+                      child: Padding(
+                        padding: EdgeInsets.only(right: 15),
+                        child: Container(
+                            width: 40,
+                            child: FittedBox(
+                              child: Icon(
+                                Icons.check,
+                                color: Colors.green,
                               ),
-                              SizedBox(width: 45),
-                              Text(
-                                evento['dia'],
-                                style: TextStyle(color: Colors.blueGrey),
-                              ),
-                            ],
-                          )
-                        ],
+                              fit: BoxFit.fill,
+                            )),
                       ),
-                    )),
+                    ),
+                    SizedBox(height: 15),
+                    GestureDetector(
+                      onTap: () {},
+                      child: Padding(
+                        padding: EdgeInsets.only(right: 15),
+                        child: Container(
+                            width: 40,
+                            child: FittedBox(
+                              child: Icon(
+                                Icons.close,
+                                color: Colors.red,
+                              ),
+                              fit: BoxFit.fill,
+                            )),
+                      ),
+                    )
+                  ],
+                ),
               ],
             ),
           ),
@@ -133,12 +149,18 @@ class _InvitesState extends State<Invites> {
 
   Widget listInvites() {
     return StreamBuilder(
-        stream: FirebaseFirestore.instance.collection("Convites").snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection("Convites")
+            .where('idFuncionario', isEqualTo: 'JIL8fXU6qSO7ilMhyl6U0nbgvQk2')
+            .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return Container(
               child: Text("No data found"),
             );
+          } else if (snapshot.data!.docs.length == 0) {
+            return Container(
+                child: Text("Parece que você não tem nenhum novo evento =("));
           } else {
             return Column(
                 children: List.generate(snapshot.data!.docs.length, (index) {

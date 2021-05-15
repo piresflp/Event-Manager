@@ -8,6 +8,7 @@ var textFieldColor = Colors.grey.withOpacity(0.15);
 var yellowStar = Color(0xFFfacb00);
 var blackTheme = Color(0x121212);
 var cyan = fromHex('#30b6d1');
+var almostWhite = fromHex('#f0f0f0');
 
 Color fromHex(String hexString) {
   final buffer = StringBuffer();
