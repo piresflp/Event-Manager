@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventmanager/theme/styles.dart';
+import 'package:eventmanager/utils/Api.dart';
 import 'package:flutter/material.dart';
 
 var idUser = 'JIL8fXU6qSO7ilMhyl6U0nbgvQk2';
@@ -50,11 +51,16 @@ class _InvitesState extends State<Invites> {
   }
 
   void getInvites() async {
+    debugPrint("AAAAAAAAA");
     FirebaseFirestore.instance
         .collection("Convites")
         .where('idFuncionario', isEqualTo: idUser)
         .snapshots()
-        .listen((data) => {print(data.docs)});
+        .listen((data) {
+      data.docs.map((e) {
+        debugPrint(e.data().toString());
+      });
+    });
   }
 
   @override
@@ -74,11 +80,7 @@ class _InvitesState extends State<Invites> {
               ],
             ),
             SizedBox(height: 30),
-            Column(
-              children: List.generate(convites.length, (index) {
-                return inviteItem(convites[index]);
-              }),
-            )
+            listInvites(),
           ],
         ),
       ),
@@ -86,17 +88,63 @@ class _InvitesState extends State<Invites> {
   }
 
   Widget inviteItem(invite) {
-    return Padding(
-      padding: const EdgeInsets.all(30.0),
-      child: Container(
-        decoration: BoxDecoration(border: Border.all(color: Colors.blueAccent)),
-        child: Row(
-          children: [
-            Padding(
-                padding: EdgeInsets.all(60), child: Text(invite['idEvento']))
-          ],
-        ),
-      ),
+    return FutureBuilder(
+      future: Api.eventData(invite['eventoRef']),
+      builder: (BuildContext context, AsyncSnapshot<dynamic> uData) {
+        var evento = uData.data();
+
+        return Padding(
+          padding: const EdgeInsets.all(30.0),
+          child: Container(
+            decoration:
+                BoxDecoration(border: Border.all(color: Colors.blueAccent)),
+            child: Row(
+              children: [
+                Padding(
+                    padding: EdgeInsets.fromLTRB(20, 10, 50, 20),
+                    child: Container(
+                      child: Column(
+                        children: [
+                          Text(evento['nome'], style: customTitle),
+                          SizedBox(height: 20),
+                          Row(
+                            children: [
+                              Text(
+                                evento['hora'],
+                                style: TextStyle(color: Colors.blueGrey),
+                              ),
+                              SizedBox(width: 45),
+                              Text(
+                                evento['dia'],
+                                style: TextStyle(color: Colors.blueGrey),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    )),
+              ],
+            ),
+          ),
+        );
+      },
     );
+  }
+
+  Widget listInvites() {
+    return StreamBuilder(
+        stream: FirebaseFirestore.instance.collection("Convites").snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return Container(
+              child: Text("No data found"),
+            );
+          } else {
+            return Column(
+                children: List.generate(snapshot.data!.docs.length, (index) {
+              return inviteItem(snapshot.data!.docs[index].data());
+            }));
+          }
+        });
   }
 }
