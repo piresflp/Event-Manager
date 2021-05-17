@@ -1,4 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eventmanager/utils/Api.dart';
+import 'package:eventmanager/pages/AddEventInvites.dart';
 import 'package:intl/intl.dart';
 
 class AddEvent extends StatefulWidget {
@@ -9,7 +13,8 @@ class AddEvent extends StatefulWidget {
 class _AddEventState extends State<AddEvent> {
   var _selectedDate; // Valor aparente no DateTime
   var _selectedTime; // Valor aparente no Time
-  String dropdownValue = 'Local'; // Valor aparente no DropButton
+  String dropdownTipo = 'Tipos'; // Valor aparente no DropButton de tipo
+  String dropdownLocal = "Local"; // Valor aparente no DropButton de local
   TextEditingController txtEvent = TextEditingController();
   TextEditingController txtDate = TextEditingController();
   TextEditingController txtTime = TextEditingController();
@@ -30,6 +35,7 @@ class _AddEventState extends State<AddEvent> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  Text("Novo evento"),
                   TextField(
                     controller: txtEvent,
                     decoration: InputDecoration(
@@ -65,36 +71,24 @@ class _AddEventState extends State<AddEvent> {
                       _selectTime(context);
                     },
                   ),
-                  DropdownButton(
-                    value: dropdownValue,
-                    icon: const Icon(Icons.place),
-                    iconSize: 24,
-                    isExpanded: true,
-                    elevation: 16,
-                    style: const TextStyle(color: Colors.black),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        dropdownValue = newValue!;
-                      });
-                    },
-                    items: <String>['Local', 'One', 'Two', 'Free', 'Four']
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
+                  getLocais(),
+                  getTipos(),
                   ConstrainedBox(
                     constraints:
                         BoxConstraints.tight(Size(double.infinity, 55)),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AddEventInvites()),
+                        );
+                      },
                       child: Text(
-                        "Convidados",
+                        "Continuar",
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             )
@@ -102,6 +96,87 @@ class _AddEventState extends State<AddEvent> {
         ),
       ),
     ));
+  }
+
+  List<DropdownMenuItem<String>> getListLocals(locais) {
+    List<DropdownMenuItem<String>> ret = [];
+    for (int i = 0; i < locais.length; i++) {
+      ret.add(DropdownMenuItem(
+          child: Text(locais[i].data()["Descricao"]),
+          value: locais[i].data()["Descricao"]));
+    }
+    return ret;
+  }
+
+  Widget getLocais() {
+    return StreamBuilder(
+        stream: FirebaseFirestore.instance.collection("Locais").snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          var locais = snapshot.data!.docs;
+          List<DropdownMenuItem> locals = getListLocals(locais);
+          if (!snapshot.hasData) {
+            return Container(
+              child: Text("No data found"),
+            );
+          } else {
+            return DropdownButton(
+              hint: Text(dropdownLocal),
+              // value: dropdownLocal,
+              icon: const Icon(Icons.place),
+              iconSize: 24,
+              isExpanded: true,
+              elevation: 16,
+              style: const TextStyle(color: Colors.black),
+              onChanged: (dynamic newValue) {
+                setState(() {
+                  dropdownLocal = newValue.toString();
+                });
+              },
+              items: locals,
+            );
+          }
+        });
+  }
+
+  List<DropdownMenuItem<String>> getListTipos(values) {
+    List<DropdownMenuItem<String>> ret = [];
+    for (int i = 0; i < values.length; i++) {
+      ret.add(DropdownMenuItem(
+          child: Text(values[i].data()["descricao"]),
+          value: values[i].data()["descricao"]));
+    }
+    return ret;
+  }
+
+  Widget getTipos() {
+    return StreamBuilder(
+        stream:
+            FirebaseFirestore.instance.collection("TiposEventos").snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          var tipos = snapshot.data!.docs;
+          List<DropdownMenuItem> item_list = getListTipos(tipos);
+          if (!snapshot.hasData) {
+            return Container(
+              child: Text("No data found"),
+            );
+          } else {
+            return DropdownButton(
+              hint: Text(dropdownTipo),
+              // value: dropdownLocal,
+              icon: const Icon(Icons.add_link),
+              iconSize: 24,
+              isExpanded: true,
+              elevation: 16,
+              style: const TextStyle(color: Colors.black),
+              onChanged: (dynamic newValue) {
+                setState(() {
+                  dropdownTipo = newValue.toString();
+                });
+              },
+              items: item_list,
+            );
+          }
+        });
   }
 
   _selectTime(BuildContext context) async {
