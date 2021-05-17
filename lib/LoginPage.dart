@@ -65,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          color: Colors.white,
+          color: Colors.grey[350],
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -83,21 +83,22 @@ class _LoginPageState extends State<LoginPage> {
                     TextField(
                       controller: txtEmail,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: "Email",
-                        labelStyle: TextStyle(color: black),
-                        fillColor: white,
-                      ),
+                          border: OutlineInputBorder(),
+                          labelText: "Email",
+                          labelStyle: TextStyle(color: black),
+                          fillColor: Colors.white,
+                          filled: true),
                     ),
                     SizedBox(height: 15),
                     TextField(
                       controller: txtSenha,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: "Senha",
-                        labelStyle: TextStyle(color: black),
-                        fillColor: white,
-                      ),
+                          border: OutlineInputBorder(),
+                          labelText: "Senha",
+                          labelStyle: TextStyle(color: black),
+                          fillColor: Colors.white,
+                          filled: true),
+                      obscureText: true,
                     ),
                     SizedBox(height: 30),
                     ConstrainedBox(

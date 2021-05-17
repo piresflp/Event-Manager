@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:async/async.dart';
+import 'package:rxdart/rxdart.dart';
 
 class YourEvents extends StatefulWidget {
   @override
@@ -23,14 +25,8 @@ class _YourEventsState extends State<YourEvents> {
     return Scaffold(
         body: SafeArea(
             child: Container(
+                color: Colors.grey[200],
                 width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Color(0xFFF5F4EF),
-                  image: DecorationImage(
-                    image: AssetImage("assets/images/ux_big.png"),
-                    alignment: Alignment.topRight,
-                  ),
-                ),
                 child: Column(
                   children: <Widget>[
                     Padding(
@@ -38,14 +34,6 @@ class _YourEventsState extends State<YourEvents> {
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  SvgPicture.asset(
-                                      "assets/icons/arrow-left.svg")
-                                ],
-                              ),
                               SizedBox(height: 25),
                               Text(
                                 "Seus Eventos",
@@ -86,12 +74,7 @@ class _YourEventsState extends State<YourEvents> {
                                         fontWeight: FontWeight.bold,
                                       )),
                                   SizedBox(height: 20),
-                                  EventContent(
-                                    numero: 1,
-                                    dia: "23/07/2003",
-                                    hora: "11:50",
-                                    nome: "Reuniao TCC",
-                                  ),
+                                  listNextEvents(),
                                 ],
                               ),
                             ),
@@ -247,6 +230,44 @@ Widget listYourEvents() {
               children: List.generate(snapshot.data!.docs.length, (index) {
             dynamic evento = snapshot.data!.docs[index].data()!;
             return AdmEventContent(
+              numero: (index + 1),
+              dia: evento["dia"],
+              hora: evento["hora"],
+              nome: evento["nome"],
+            );
+          }));
+        }
+      });
+}
+
+Stream<QuerySnapshot> getData() {
+  var stream1 = FirebaseFirestore.instance
+      .collection("Eventos")
+      .where('idOrganizador', isEqualTo: "JIL8fXU6qSO7ilMhyl6U0nbgvQk2")
+      .snapshots();
+  var stream2 = FirebaseFirestore.instance
+      .collection("Convites")
+      .where('idFuncionario', isEqualTo: 'JIL8fXU6qSO7ilMhyl6U0nbgvQk2')
+      .where('confirmado', isEqualTo: 'True')
+      .snapshots();
+  return stream1.mergeWith([stream2]);
+}
+
+Widget listNextEvents() {
+  String idUser = "JIL8fXU6qSO7ilMhyl6U0nbgvQk2"; // TODO: Pegar idUser
+  return StreamBuilder(
+      stream: getData(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (!snapshot.hasData) {
+          return RichText(
+            text: TextSpan(
+                children: [TextSpan(text: "Nenhum evento por enquanto.")]),
+          );
+        } else {
+          return Column(
+              children: List.generate(snapshot.data!.docs.length, (index) {
+            dynamic evento = snapshot.data!.docs[index].data()!;
+            return EventContent(
               numero: (index + 1),
               dia: evento["dia"],
               hora: evento["hora"],
