@@ -1,3 +1,5 @@
+import 'package:Even7/theme/colors.dart';
+
 import 'LoginPage.dart';
 import 'pages/RootApp.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +19,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/login',
       routes: {'/': (context) => RootApp(), '/login': (context) => LoginPage()},
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.lightBlue,
       ),
       debugShowCheckedModeBanner: false,
     );
