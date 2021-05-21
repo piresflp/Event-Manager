@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Even7',
       initialRoute: '/login',
       routes: {'/': (context) => RootApp(), '/login': (context) => LoginPage()},
       theme: ThemeData(

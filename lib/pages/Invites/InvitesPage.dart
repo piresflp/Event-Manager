@@ -1,6 +1,7 @@
 import 'package:Even7/theme/styles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:Even7/theme/colors.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:Even7/theme/styles.dart';
 import 'package:Even7/utils/Api.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +39,14 @@ class InvitesPage extends StatefulWidget {
 }
 
 class _InvitesPageState extends State<InvitesPage> {
+  @override
+  initState() {
+    super.initState();
+    Firebase.initializeApp().whenComplete(() {
+      setState(() {});
+    });
+  }
+
   void makeToast(var text) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(text),
