@@ -50,29 +50,29 @@ class InviteContent extends StatelessWidget {
             ])),
           ),
           Spacer(),
-          GestureDetector(
-            onTap: () {
-              this.acceptInvite(this.id);
-            },
-            child: Container(
-              margin: EdgeInsets.only(left: 8),
-              height: 40,
-              width: 40,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle, color: Color(0xFF49CC96)),
+          Container(
+            margin: EdgeInsets.only(left: 8),
+            height: 40,
+            width: 40,
+            decoration:
+                BoxDecoration(shape: BoxShape.circle, color: Color(0xFF49CC96)),
+            child: GestureDetector(
+              onTap: () {
+                acceptInvite(id);
+              },
               child: Icon(Icons.check, color: Colors.white),
             ),
           ),
-          GestureDetector(
-            onTap: () {
-              this.denyInvite(this.id);
-            },
-            child: Container(
-              margin: EdgeInsets.only(left: 8),
-              height: 40,
-              width: 40,
-              decoration:
-                  BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+          Container(
+            margin: EdgeInsets.only(left: 8),
+            height: 40,
+            width: 40,
+            decoration:
+                BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+            child: GestureDetector(
+              onTap: () {
+                denyInvite(id);
+              },
               child: Icon(Icons.cancel_outlined, color: Colors.white),
             ),
           ),
