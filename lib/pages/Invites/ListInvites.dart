@@ -51,20 +51,15 @@ Widget inviteItem(rawInvite, index) {
     builder: (BuildContext context, AsyncSnapshot<dynamic> uData) {
       var evento = uData.data();
 
-      return FutureBuilder(
-          future: Api.eventData(evento['local']),
-          builder: (BuildContext ctx, AsyncSnapshot<dynamic> localData) {
-            var local = localData.data();
-            return InviteContent(
-              id: id,
-              dia: evento['dia'],
-              hora: evento['hora'],
-              nome: evento['nome'],
-              numero: (index + 1),
-              acceptInvite: RequestsHandler.acceptInvite,
-              denyInvite: RequestsHandler.denyInvite,
-            );
-          });
+      return InviteContent(
+        id: id,
+        dia: evento['dia'],
+        hora: evento['hora'],
+        nome: evento['nome'],
+        numero: (index + 1),
+        acceptInvite: RequestsHandler.acceptInvite,
+        denyInvite: RequestsHandler.denyInvite,
+      );
     },
   );
 }

@@ -1,4 +1,5 @@
 import 'AddEvent.dart';
+import 'Chat/ChatPage.dart';
 import 'Invites/InvitesPage.dart';
 import 'YourEvents/YourEventsPage.dart';
 import '../theme/colors.dart';
@@ -22,7 +23,7 @@ class _RootAppState extends State<RootApp> {
   }
 
   Widget getBody() {
-    List<Widget> pages = [InvitesPage(), AddEvent(), YourEvents()];
+    List<Widget> pages = [InvitesPage(), AddEvent(), YourEvents(), ChatPage()];
 
     return IndexedStack(
       index: pageIndex,
@@ -35,8 +36,9 @@ class _RootAppState extends State<RootApp> {
       "assets/images/Invite.svg",
       "assets/images/Add.svg",
       "assets/images/Calendar.svg",
+      "assets/images/Calendar.svg"
     ];
-    List textItems = ["Convites", "Criar", "Seus Eventos"];
+    List textItems = ["Convites", "Criar", "Seus Eventos", "Chat"];
     return Container(
       width: double.infinity,
       height: 75,
