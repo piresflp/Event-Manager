@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:Even7/theme/colors.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:Even7/theme/styles.dart';
-import 'package:Even7/utils/Api.dart';
+import 'package:Even7/utils/API.dart';
 import 'package:flutter/material.dart';
 
 import 'ListInvites.dart';

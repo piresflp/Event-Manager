@@ -49,35 +49,38 @@ class _YourEventsState extends State<YourEvents> {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(50),
                             color: Colors.white),
-                        child: Stack(
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.all(30),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text("Organizados por você",
-                                      style: TextStyle(
-                                        fontSize: 22,
-                                        color: Color(0xFF0D1333),
-                                        fontWeight: FontWeight.bold,
-                                      )),
-                                  SizedBox(height: 20),
-                                  listYourEvents(),
-                                  SizedBox(height: 40),
-                                  Text("Próximos eventos",
-                                      style: TextStyle(
-                                        fontSize: 22,
-                                        color: Color(0xFF0D1333),
-                                        fontWeight: FontWeight.bold,
-                                      )),
-                                  SizedBox(height: 20),
-                                  listNextEvents(),
-                                ],
+                        child: LayoutBuilder(builder: (context, constraint) {
+                          return SingleChildScrollView(
+                              child: Stack(
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(30),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text("Organizados por você",
+                                        style: TextStyle(
+                                          fontSize: 22,
+                                          color: Color(0xFF0D1333),
+                                          fontWeight: FontWeight.bold,
+                                        )),
+                                    SizedBox(height: 20),
+                                    listYourEvents(),
+                                    SizedBox(height: 40),
+                                    Text("Próximos eventos",
+                                        style: TextStyle(
+                                          fontSize: 22,
+                                          color: Color(0xFF0D1333),
+                                          fontWeight: FontWeight.bold,
+                                        )),
+                                    SizedBox(height: 20),
+                                    listNextEvents(),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
+                            ],
+                          ));
+                        }),
                       ),
                     )
                   ],

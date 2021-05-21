@@ -1,4 +1,4 @@
-import 'package:Even7/utils/Api.dart';
+import 'package:Even7/utils/API.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'InviteContent.dart';
