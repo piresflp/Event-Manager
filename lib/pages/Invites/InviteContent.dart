@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 
 class InviteContent extends StatelessWidget {
+  final String id;
   final int numero;
   final String dia;
   final String hora;
   final String nome;
+  final Function acceptInvite;
+  final Function denyInvite;
 
   const InviteContent({
     Key? key,
+    required this.id,
     this.numero = 0,
     this.dia = "",
     this.hora = "",
     this.nome = "",
+    required this.acceptInvite,
+    required this.denyInvite,
   }) : super(key: key);
 
   @override
@@ -50,10 +56,90 @@ class InviteContent extends StatelessWidget {
             width: 40,
             decoration:
                 BoxDecoration(shape: BoxShape.circle, color: Color(0xFF49CC96)),
-            child: Icon(Icons.search, color: Colors.white),
-          )
+            child: GestureDetector(
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return acceptDialog(context);
+                    });
+              },
+              child: Icon(Icons.check, color: Colors.white),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 8),
+            height: 40,
+            width: 40,
+            decoration:
+                BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+            child: GestureDetector(
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return denyDialog(context);
+                    });
+              },
+              child: Icon(Icons.cancel_outlined, color: Colors.white),
+            ),
+          ),
         ],
       ),
     );
+  }
+
+  Widget acceptDialog(context) {
+    return AlertDialog(
+      title: Text("Aceitando convite"),
+      content: Text("Tem certeza que deseja confirmar presença em $nome ?"),
+      actions: <Widget>[
+        // define os botões na base do dialogo
+        ElevatedButton(
+          child: Text("Sim"),
+          onPressed: () {
+            acceptInvite(id);
+            Navigator.of(context).pop();
+            makeToast("Convite aceito com sucesso!", context);
+          },
+        ),
+        ElevatedButton(
+          child: Text("Não"),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget denyDialog(context) {
+    return AlertDialog(
+      title: Text("Recusando convite"),
+      content: Text("Tem certeza que deseja recusar presença em $nome ?"),
+      actions: <Widget>[
+        // define os botões na base do dialogo
+        ElevatedButton(
+          child: Text("Sim"),
+          onPressed: () {
+            denyInvite(id);
+            Navigator.of(context).pop();
+            makeToast("Convite recusado com sucesso!", context);
+          },
+        ),
+        ElevatedButton(
+          child: Text("Não"),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
+    );
+  }
+
+  void makeToast(text, context) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(text),
+    ));
   }
 }
