@@ -80,7 +80,7 @@ class _AddEventInvitesState extends State<AddEventInvites> {
 
     return new Scaffold(
       appBar: searchBar.build(context),
-      body: Container(
+      body: SingleChildScrollView(
           child: Column(
         children: [
           Row(
