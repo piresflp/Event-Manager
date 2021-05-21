@@ -1,7 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eventmanager/utils/Api.dart';
 import 'package:eventmanager/pages/AddEventInvites.dart';
 import 'package:intl/intl.dart';
 
@@ -18,6 +16,8 @@ class _AddEventState extends State<AddEvent> {
   TextEditingController txtEvent = TextEditingController();
   TextEditingController txtDate = TextEditingController();
   TextEditingController txtTime = TextEditingController();
+
+  String idUser = "JIL8fXU6qSO7ilMhyl6U0nbgvQk2"; // TODO: trocar idUser
 
   @override
   Widget build(BuildContext context) {
@@ -79,8 +79,16 @@ class _AddEventState extends State<AddEvent> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) => AddEventInvites()),
+                          MaterialPageRoute(builder: (context) {
+                            Evento new_event = new Evento(
+                                nome: txtEvent.text,
+                                dia: txtDate.text,
+                                hora: txtTime.text,
+                                local: dropdownLocal,
+                                tipo: dropdownTipo,
+                                idOrganizador: idUser);
+                            return AddEventInvites(data: new_event);
+                          }),
                         );
                       },
                       child: Text(
@@ -195,6 +203,8 @@ class _AddEventState extends State<AddEvent> {
   }
 
   _selectDate(BuildContext context) async {
+    final f = new DateFormat('dd/MM/yyyy');
+
     DateTime? newSelectedDate = await showDatePicker(
         context: context,
         initialDate: _selectedDate != null ? _selectedDate : DateTime.now(),
@@ -204,7 +214,7 @@ class _AddEventState extends State<AddEvent> {
     if (newSelectedDate != null) {
       _selectedDate = newSelectedDate;
       txtDate
-        ..text = DateFormat.yMMMd().format(_selectedDate)
+        ..text = f.format(_selectedDate)
         ..selection = TextSelection.fromPosition(TextPosition(
             offset: txtDate.text.length, affinity: TextAffinity.upstream));
     }

@@ -1,10 +1,33 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_search_bar/flutter_search_bar.dart';
 
+class Evento {
+  final String nome;
+  final String dia;
+  final String hora;
+  final String local;
+  final String tipo;
+  final String idOrganizador;
+
+  const Evento({
+    this.nome = "",
+    this.dia = "",
+    this.hora = "",
+    this.local = "",
+    this.tipo = "",
+    this.idOrganizador = "",
+  });
+}
+
 class AddEventInvites extends StatefulWidget {
+  final Evento data;
+
+  AddEventInvites({required this.data});
+
   @override
-  _AddEventInvitesState createState() => _AddEventInvitesState();
+  _AddEventInvitesState createState() => _AddEventInvitesState(data);
 }
 
 class _AddEventInvitesState extends State<AddEventInvites> {
@@ -12,18 +35,27 @@ class _AddEventInvitesState extends State<AddEventInvites> {
   String filter_list = "funcionarios";
   double distance_center_text = 0;
 
-  AppBar buildAppBar(BuildContext context) {
-    return new AppBar(
-        title: new Text('Procurar funcionarios'),
-        actions: [searchBar.getSearchAction(context)]);
-  }
+  Evento new_event;
+  List<String> invitedUsers = <String>[];
 
-  _AddEventInvitesState() {
+  var _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  Random _rnd = Random();
+
+  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
+      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+
+  _AddEventInvitesState(this.new_event) {
     searchBar = SearchBar(
         inBar: false,
         setState: setState,
         onSubmitted: print,
         buildDefaultAppBar: buildAppBar);
+  }
+
+  AppBar buildAppBar(BuildContext context) {
+    return new AppBar(
+        title: new Text('Procurar funcionarios'),
+        actions: [searchBar.getSearchAction(context)]);
   }
 
   Stream<QuerySnapshot> getFuncionarios() {
@@ -45,7 +77,7 @@ class _AddEventInvitesState extends State<AddEventInvites> {
           } else {
             return Column(
                 children: List.generate(snapshot.data!.docs.length, (index) {
-              dynamic person = snapshot.data!.docs[index].data()!;
+              dynamic person = snapshot.data!.docs[index];
               bool? _isSelected = false;
               return CheckboxListTile(
                 title: Container(
@@ -54,16 +86,21 @@ class _AddEventInvitesState extends State<AddEventInvites> {
                     CircleAvatar(
                         radius: 20,
                         backgroundImage:
-                            NetworkImage(person["foto"], scale: 0.4)),
+                            NetworkImage(person.data()!["foto"], scale: 0.4)),
                     SizedBox(width: distance_center_text),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [Text(person["nome"]), Text(person["apelido"])],
+                      children: [
+                        Text(person.data()!["nome"]),
+                        Text(person.data()!["apelido"])
+                      ],
                     )
                   ],
                 )),
                 value: _isSelected,
                 onChanged: (bool? newValue) {
+                  invitedUsers.add(person.id);
+                  debugPrint("oi");
                   setState(() {
                     _isSelected = newValue;
                   });
@@ -122,7 +159,26 @@ class _AddEventInvitesState extends State<AddEventInvites> {
           child: ConstrainedBox(
         constraints: BoxConstraints.tight(Size(double.infinity, 55)),
         child: ElevatedButton(
-          onPressed: () => null,
+          onPressed: () {
+            String event_id = getRandomString(20);
+            FirebaseFirestore.instance.collection("Eventos").doc(event_id).set({
+              "nome": new_event.nome,
+              "dia": new_event.dia,
+              "hora": new_event.hora,
+              "idOrganizador": new_event.idOrganizador,
+              "local": new_event.local,
+              "tipo": new_event.tipo
+            });
+            DocumentReference docRef =
+                FirebaseFirestore.instance.collection("Eventos").doc(event_id);
+            for (int i = 0; i < invitedUsers.length; i++) {
+              FirebaseFirestore.instance.collection("Convites").doc().set({
+                "confirmado": null,
+                "eventoRef": docRef,
+                "idFuncionario": invitedUsers[i]
+              });
+            }
+          },
           child: Text(
             "Criar evento",
           ),
