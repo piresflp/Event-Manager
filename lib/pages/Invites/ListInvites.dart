@@ -1,3 +1,4 @@
+import 'package:Even7/pages/Invites/RequestsHandler.dart';
 import 'package:Even7/utils/Api.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -20,13 +21,16 @@ Widget listInvites() {
         } else {
           return Column(
               children: List.generate(snapshot.data!.docs.length, (index) {
-            return inviteItem(snapshot.data!.docs[index].data(), index);
+            return inviteItem(snapshot.data!.docs[index], index);
           }));
         }
       });
 }
 
-Widget inviteItem(invite, index) {
+Widget inviteItem(rawInvite, index) {
+  final id = rawInvite.id;
+  final invite = rawInvite.data();
+
   return FutureBuilder(
     future: Api.eventData(invite['eventoRef']),
     builder: (BuildContext context, AsyncSnapshot<dynamic> uData) {
@@ -37,10 +41,14 @@ Widget inviteItem(invite, index) {
           builder: (BuildContext ctx, AsyncSnapshot<dynamic> localData) {
             var local = localData.data();
             return InviteContent(
-                dia: evento['dia'],
-                hora: evento['hora'],
-                nome: evento['nome'],
-                numero: index + 1);
+              id: id,
+              dia: evento['dia'],
+              hora: evento['hora'],
+              nome: evento['nome'],
+              numero: (index + 1),
+              acceptInvite: RequestsHandler.acceptInvite,
+              denyInvite: RequestsHandler.denyInvite,
+            );
           });
     },
   );

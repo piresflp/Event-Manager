@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 
 class InviteContent extends StatelessWidget {
+  final String id;
   final int numero;
   final String dia;
   final String hora;
   final String nome;
+  final Function acceptInvite;
+  final Function denyInvite;
 
   const InviteContent({
     Key? key,
+    required this.id,
     this.numero = 0,
     this.dia = "",
     this.hora = "",
     this.nome = "",
+    required this.acceptInvite,
+    required this.denyInvite,
   }) : super(key: key);
 
   @override
@@ -44,14 +50,32 @@ class InviteContent extends StatelessWidget {
             ])),
           ),
           Spacer(),
-          Container(
-            margin: EdgeInsets.only(left: 8),
-            height: 40,
-            width: 40,
-            decoration:
-                BoxDecoration(shape: BoxShape.circle, color: Color(0xFF49CC96)),
-            child: Icon(Icons.search, color: Colors.white),
-          )
+          GestureDetector(
+            onTap: () {
+              this.acceptInvite(this.id);
+            },
+            child: Container(
+              margin: EdgeInsets.only(left: 8),
+              height: 40,
+              width: 40,
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle, color: Color(0xFF49CC96)),
+              child: Icon(Icons.check, color: Colors.white),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              this.denyInvite(this.id);
+            },
+            child: Container(
+              margin: EdgeInsets.only(left: 8),
+              height: 40,
+              width: 40,
+              decoration:
+                  BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+              child: Icon(Icons.cancel_outlined, color: Colors.white),
+            ),
+          ),
         ],
       ),
     );
