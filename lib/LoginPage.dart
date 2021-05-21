@@ -102,8 +102,7 @@ class _LoginPageState extends State<LoginPage> {
                           labelText: "Senha",
                           labelStyle: TextStyle(color: black),
                           fillColor: Colors.white,
-                          filled: true),
-                      obscureText: true,
+                          filled: true),                      
                     ),
                     SizedBox(height: 30),
                     ConstrainedBox(

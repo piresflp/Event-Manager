@@ -1,5 +1,5 @@
 import 'AddEvent.dart';
-import 'Invites.dart';
+import 'Invites/InvitesPage.dart';
 import 'YourEvents.dart';
 import '../theme/colors.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +22,7 @@ class _RootAppState extends State<RootApp> {
   }
 
   Widget getBody() {
-    List<Widget> pages = [Invites(), AddEvent(), YourEvents()];
+    List<Widget> pages = [InvitesPage(), AddEvent(), YourEvents()];
 
     return IndexedStack(
       index: pageIndex,
