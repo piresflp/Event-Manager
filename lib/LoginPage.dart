@@ -1,6 +1,6 @@
-import 'package:eventmanager/pages/RootApp.dart';
-import 'package:eventmanager/theme/colors.dart';
-import 'package:eventmanager/theme/styles.dart';
+import 'pages/RootApp.dart';
+import 'theme/colors.dart';
+import 'theme/styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -69,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          color: Colors.white,
+          color: Colors.grey[350],
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -87,22 +87,23 @@ class _LoginPageState extends State<LoginPage> {
                     TextField(
                       controller: txtEmail,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: "Email",
-                        labelStyle: TextStyle(color: black),
-                        fillColor: white,
-                      ),
+                          border: OutlineInputBorder(),
+                          labelText: "Email",
+                          labelStyle: TextStyle(color: black),
+                          fillColor: Colors.white,
+                          filled: true),
                     ),
                     SizedBox(height: 15),
                     TextField(
                       controller: txtSenha,
                       obscureText: true,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: "Senha",
-                        labelStyle: TextStyle(color: black),
-                        fillColor: white,
-                      ),
+                          border: OutlineInputBorder(),
+                          labelText: "Senha",
+                          labelStyle: TextStyle(color: black),
+                          fillColor: Colors.white,
+                          filled: true),
+                      obscureText: true,
                     ),
                     SizedBox(height: 30),
                     ConstrainedBox(

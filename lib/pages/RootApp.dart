@@ -1,11 +1,9 @@
-import 'package:eventmanager/pages/AddEvent.dart';
-import 'package:eventmanager/pages/Invites.dart';
-import 'package:eventmanager/pages/YourEvents.dart';
+import 'AddEvent.dart';
+import 'Invites.dart';
+import 'YourEvents.dart';
+import '../theme/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:eventmanager/theme/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-import '../LoginPage.dart';
 
 class RootApp extends StatefulWidget {
   @override
