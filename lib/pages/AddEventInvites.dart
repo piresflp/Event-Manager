@@ -25,7 +25,41 @@ class _AddEventInvitesState extends State<AddEventInvites> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(appBar: searchBar.build(context));
+    return new Scaffold(
+        appBar: searchBar.build(context),
+        body: Container(
+            child: Column(
+          children: [
+            Row(
+              children: [
+                InputChip(
+                  onPressed: () => null,
+                  avatar: CircleAvatar(
+                    backgroundColor: Colors.grey.shade800,
+                    child: const Icon(Icons.person),
+                  ),
+                  label: const Text('Funcionários'),
+                ),
+                InputChip(
+                  onPressed: () => null,
+                  avatar: CircleAvatar(
+                    backgroundColor: Colors.grey.shade800,
+                    child: const Icon(Icons.people),
+                  ),
+                  label: const Text('Times'),
+                ),
+                InputChip(
+                  onPressed: () => null,
+                  avatar: CircleAvatar(
+                    backgroundColor: Colors.grey.shade800,
+                    child: const Icon(Icons.groups),
+                  ),
+                  label: const Text('Depertamentos'),
+                ),
+              ],
+            ),
+          ],
+        )));
   }
 
   // @override
