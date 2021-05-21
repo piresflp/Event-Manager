@@ -46,7 +46,11 @@ class _LoginPageState extends State<LoginPage> {
           .signInWithEmailAndPassword(email: email, password: password);
 
       makeToast("Logado com sucesso");
+
       Navigator.pushNamedAndRemoveUntil(context, "/", (r) => false);
+
+
+
     } on FirebaseAuthException catch (e) {
       String errorText = e.code;
 
@@ -92,6 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: 15),
                     TextField(
                       controller: txtSenha,
+                      obscureText: true,
                       decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: "Senha",
