@@ -40,9 +40,14 @@ class _AddEventInvitesState extends State<AddEventInvites> {
 
   var _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   Random _rnd = Random();
-
   String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
       length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+
+  void makeToast(String text) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(text),
+    ));
+  }
 
   _AddEventInvitesState(this.new_event) {
     searchBar = SearchBar(
@@ -79,33 +84,38 @@ class _AddEventInvitesState extends State<AddEventInvites> {
                 children: List.generate(snapshot.data!.docs.length, (index) {
               dynamic person = snapshot.data!.docs[index];
               bool? _isSelected = false;
-              return CheckboxListTile(
-                title: Container(
-                    child: Row(
-                  children: [
-                    CircleAvatar(
-                        radius: 20,
-                        backgroundImage:
-                            NetworkImage(person.data()!["foto"], scale: 0.4)),
-                    SizedBox(width: distance_center_text),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(person.data()!["nome"]),
-                        Text(person.data()!["apelido"])
-                      ],
-                    )
-                  ],
-                )),
-                value: _isSelected,
-                onChanged: (bool? newValue) {
-                  invitedUsers.add(person.id);
-                  debugPrint("oi");
-                  setState(() {
-                    _isSelected = newValue;
-                  });
-                },
-              );
+              return StatefulBuilder(builder: (context, setState) {
+                return CheckboxListTile(
+                  title: Container(
+                      child: Row(
+                    children: [
+                      CircleAvatar(
+                          radius: 20,
+                          backgroundImage:
+                              NetworkImage(person.data()!["foto"], scale: 0.4)),
+                      SizedBox(width: distance_center_text),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(person.data()!["nome"]),
+                          Text(person.data()!["apelido"])
+                        ],
+                      )
+                    ],
+                  )),
+                  value: _isSelected,
+                  onChanged: (newValue) {
+                    if (newValue == true) {
+                      invitedUsers.add(person.id);
+                    } else {
+                      invitedUsers.remove(person.id);
+                    }
+                    setState(() {
+                      _isSelected = newValue;
+                    });
+                  },
+                );
+              });
             }));
           }
         });
@@ -178,6 +188,8 @@ class _AddEventInvitesState extends State<AddEventInvites> {
                 "idFuncionario": invitedUsers[i]
               });
             }
+            makeToast("Evento criado com sucessp");
+            Navigator.pushNamedAndRemoveUntil(context, "/", (r) => false);
           },
           child: Text(
             "Criar evento",
