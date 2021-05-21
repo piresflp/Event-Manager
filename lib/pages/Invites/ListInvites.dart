@@ -9,6 +9,7 @@ Widget listInvites() {
       stream: FirebaseFirestore.instance
           .collection("Convites")
           .where('idFuncionario', isEqualTo: 'JIL8fXU6qSO7ilMhyl6U0nbgvQk2')
+          .where('confirmado', isNull: true)
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) {
@@ -17,7 +18,21 @@ Widget listInvites() {
           );
         } else if (snapshot.data!.docs.length == 0) {
           return Container(
-              child: Text("Parece que você não tem nenhum novo evento =("));
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.mark_email_read_outlined,
+                  size: 150,
+                  color: Colors.black.withOpacity(0.3),
+                ),
+                Text(
+                  "Parece que você não tem nenhum novo evento =(",
+                  style: TextStyle(color: Colors.black.withOpacity(0.3)),
+                )
+              ],
+            ),
+          );
         } else {
           return Column(
               children: List.generate(snapshot.data!.docs.length, (index) {
