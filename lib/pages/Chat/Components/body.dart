@@ -1,10 +1,12 @@
 import 'package:Even7/pages/Chat/Components/FillOutButton.dart';
+import 'package:Even7/pages/Chat/Components/MessagesScreen.dart';
 import 'package:Even7/pages/Invites/InviteContent.dart';
-import 'package:Even7/pages/Invites/RequestsHandler.dart';
 import 'package:Even7/theme/colors.dart';
 import 'package:Even7/utils/Api.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+import 'ChatCard.dart';
 
 var idFunc = 'JIL8fXU6qSO7ilMhyl6U0nbgvQk2';
 
@@ -101,7 +103,14 @@ Widget chatItem(rawInvite, index) {
             future: Api.eventData(evento['chat']),
             builder: (BuildContext context, AsyncSnapshot<dynamic> rawChat) {
               var chat = rawChat.data();
-              return ChatCard(evento: evento, chat: chat);
+              return ChatCard(
+                  evento: evento,
+                  chat: chat,
+                  press: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              MessagesScreen(chat: chat, evento: evento))));
             });
       });
 }
@@ -143,65 +152,16 @@ Widget getAdminEvents() {
                 builder:
                     (BuildContext context, AsyncSnapshot<dynamic> rawChat) {
                   var chat = rawChat.data();
-                  return ChatCard(evento: evento, chat: chat);
+                  return ChatCard(
+                      evento: evento,
+                      chat: chat,
+                      press: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  MessagesScreen(chat: chat, evento: evento))));
                 });
           }));
         }
       });
-}
-
-class ChatCard extends StatelessWidget {
-  final dynamic evento;
-  final dynamic chat;
-
-  const ChatCard({
-    Key? key,
-    this.evento,
-    this.chat,
-  }) : super(key: key);
-
-  String convertTimestamp(timestamp) {
-    if (timestamp == null) return "";
-
-    var parsed = DateTime.parse(timestamp.toDate().toString());
-    String ret = parsed.hour.toString() + ":" + parsed.minute.toString();
-    return ret;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-          horizontal: kDefaultPadding, vertical: kDefaultPadding * 0.75),
-      child: Row(children: [
-        CircleAvatar(
-            radius: 24, backgroundImage: NetworkImage(evento['imagem'])),
-        Expanded(
-            child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                evento['nome'],
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-              ),
-              SizedBox(height: 8),
-              Opacity(
-                opacity: 0.64,
-                child: Text(
-                  chat['lastMessage']['message'],
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              )
-            ],
-          ),
-        )),
-        Opacity(
-            opacity: 0.64,
-            child: Text(convertTimestamp(chat['lastMessage']['date']))),
-      ]),
-    );
-  }
 }
