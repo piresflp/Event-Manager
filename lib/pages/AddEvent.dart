@@ -1,7 +1,10 @@
+import 'package:eventmanager/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventmanager/pages/AddEventInvites.dart';
 import 'package:intl/intl.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:io';
 
 class AddEvent extends StatefulWidget {
   @override
@@ -17,7 +20,59 @@ class _AddEventState extends State<AddEvent> {
   TextEditingController txtDate = TextEditingController();
   TextEditingController txtTime = TextEditingController();
 
+  String image_picker =
+      "https://img.freepik.com/free-vector/pattern-geometric-line-circle-abstract-seamless-blue-line_60284-53.jpg?size=626&ext=jpg";
+
   String idUser = "JIL8fXU6qSO7ilMhyl6U0nbgvQk2"; // TODO: trocar idUser
+
+  Widget buildDecoration() {
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: new NetworkImage(image_picker),
+          fit: BoxFit.cover,
+        ),
+      ),
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height / 2.5,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Spacer(),
+          GestureDetector(
+              child: Align(
+                alignment: Alignment.center,
+                child: Icon(
+                  Icons.image,
+                  size: 90,
+                  color: Colors.black,
+                ),
+              ),
+              onTap: () async {
+                FilePickerResult? result = await FilePicker.platform.pickFiles(
+                  type: FileType.custom,
+                  allowedExtensions: ['jpg', 'png'],
+                );
+
+                if (result != null) {
+                  image_picker = result.files.single.path.toString();
+                } else {
+                  // User canceled the picker
+                }
+              }),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Text(
+              'Imagem evento',
+              style: TextStyle(color: Colors.black, fontSize: 18),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Spacer(),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +83,13 @@ class _AddEventState extends State<AddEvent> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            buildDecoration(),
             Padding(
               padding: EdgeInsets.fromLTRB(50, 0, 50, 0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text("Novo evento"),
                   TextField(
                     controller: txtEvent,
                     decoration: InputDecoration(
@@ -86,7 +141,8 @@ class _AddEventState extends State<AddEvent> {
                                 hora: txtTime.text,
                                 local: dropdownLocal,
                                 tipo: dropdownTipo,
-                                idOrganizador: idUser);
+                                idOrganizador: idUser,
+                                imagem: image_picker);
                             return AddEventInvites(data: new_event);
                           }),
                         );

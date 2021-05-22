@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_search_bar/flutter_search_bar.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:io';
 
 class Evento {
   final String nome;
@@ -10,6 +12,7 @@ class Evento {
   final String local;
   final String tipo;
   final String idOrganizador;
+  final String imagem;
 
   const Evento({
     this.nome = "",
@@ -18,6 +21,7 @@ class Evento {
     this.local = "",
     this.tipo = "",
     this.idOrganizador = "",
+    this.imagem = "",
   });
 }
 
@@ -33,6 +37,7 @@ class AddEventInvites extends StatefulWidget {
 class _AddEventInvitesState extends State<AddEventInvites> {
   var searchBar;
   String filter_list = "funcionarios";
+  String stored_image = "";
   double distance_center_text = 0;
 
   Evento new_event;
@@ -121,6 +126,20 @@ class _AddEventInvitesState extends State<AddEventInvites> {
         });
   }
 
+  Future uploadImageToFirebase(
+      BuildContext context, String image_path, String image_name) async {
+    File image_file = File(image_path);
+    Reference firebaseStorageRef =
+        FirebaseStorage.instance.ref().child('event_images/$image_name');
+    UploadTask uploadTask = firebaseStorageRef.putFile(image_file);
+    await uploadTask.whenComplete(() async {
+      String url = (await firebaseStorageRef.getDownloadURL()).toString();
+      stored_image = url;
+    }).catchError((onError) {
+      print(onError);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     distance_center_text = MediaQuery.of(context).size.height * 3 / 100;
@@ -169,7 +188,10 @@ class _AddEventInvitesState extends State<AddEventInvites> {
           child: ConstrainedBox(
         constraints: BoxConstraints.tight(Size(double.infinity, 55)),
         child: ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
+            String event_image_id = getRandomString(20);
+            await uploadImageToFirebase(
+                context, new_event.imagem, event_image_id);
             String event_id = getRandomString(20);
             FirebaseFirestore.instance.collection("Eventos").doc(event_id).set({
               "nome": new_event.nome,
@@ -177,7 +199,8 @@ class _AddEventInvitesState extends State<AddEventInvites> {
               "hora": new_event.hora,
               "idOrganizador": new_event.idOrganizador,
               "local": new_event.local,
-              "tipo": new_event.tipo
+              "tipo": new_event.tipo,
+              "image": stored_image
             });
             DocumentReference docRef =
                 FirebaseFirestore.instance.collection("Eventos").doc(event_id);
@@ -188,7 +211,7 @@ class _AddEventInvitesState extends State<AddEventInvites> {
                 "idFuncionario": invitedUsers[i]
               });
             }
-            makeToast("Evento criado com sucessp");
+            makeToast("Evento criado com sucesso");
             Navigator.pushNamedAndRemoveUntil(context, "/", (r) => false);
           },
           child: Text(
