@@ -1,4 +1,4 @@
-import 'package:Even7/pages/Chat/Components/MessagesContent.dart';
+import 'package:Even7/pages/Chat/Components/MessagesScreen/MessagesContent.dart';
 import 'package:Even7/theme/colors.dart';
 import 'package:flutter/material.dart';
 

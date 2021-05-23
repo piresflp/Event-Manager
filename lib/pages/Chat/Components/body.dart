@@ -1,5 +1,5 @@
 import 'package:Even7/pages/Chat/Components/FillOutButton.dart';
-import 'package:Even7/pages/Chat/Components/MessagesScreen.dart';
+import 'package:Even7/pages/Chat/Components/MessagesScreen/MessagesScreen.dart';
 import 'package:Even7/pages/Invites/InviteContent.dart';
 import 'package:Even7/theme/colors.dart';
 import 'package:Even7/utils/Api.dart';
