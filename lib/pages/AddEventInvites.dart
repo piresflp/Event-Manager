@@ -192,6 +192,8 @@ class _AddEventInvitesState extends State<AddEventInvites> {
             String event_image_id = getRandomString(20);
             await uploadImageToFirebase(
                 context, new_event.imagem, event_image_id);
+            DocumentReference chatRef =
+                FirebaseFirestore.instance.collection("Chats").doc();
             String event_id = getRandomString(20);
             FirebaseFirestore.instance.collection("Eventos").doc(event_id).set({
               "nome": new_event.nome,
@@ -200,7 +202,8 @@ class _AddEventInvitesState extends State<AddEventInvites> {
               "idOrganizador": new_event.idOrganizador,
               "local": new_event.local,
               "tipo": new_event.tipo,
-              "image": stored_image
+              "image": stored_image,
+              "chat": chatRef
             });
             DocumentReference docRef =
                 FirebaseFirestore.instance.collection("Eventos").doc(event_id);
