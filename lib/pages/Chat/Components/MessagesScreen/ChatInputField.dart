@@ -1,9 +1,17 @@
 import 'package:Even7/theme/colors.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+var idFunc = 'JIL8fXU6qSO7ilMhyl6U0nbgvQk2';
+var apelido = 'Python';
+
 class ChatInputField extends StatelessWidget {
-  const ChatInputField({
+  final TextEditingController txtController = TextEditingController();
+  final DocumentReference chat;
+
+  ChatInputField({
     Key? key,
+    required this.chat,
   }) : super(key: key);
 
   @override
@@ -38,6 +46,12 @@ class ChatInputField extends StatelessWidget {
                     SizedBox(width: kDefaultPadding),
                     Expanded(
                       child: TextField(
+                        controller: txtController,
+                        textInputAction: TextInputAction.go,
+                        onSubmitted: (value) {
+                          sendMessage(value);
+                          txtController.clear();
+                        },
                         decoration: InputDecoration(
                             hintText: "Digite uma mensagem",
                             border: InputBorder.none),
@@ -54,5 +68,19 @@ class ChatInputField extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void sendMessage(text) {
+    Map<String, dynamic> msgObject = {
+      'date': DateTime.now(),
+      'idSender': idFunc,
+      'sender': apelido,
+      'text': text,
+    };
+
+    chat.collection('messages').add(msgObject);
+    chat.update({
+      'lastMessage': msgObject,
+    });
   }
 }

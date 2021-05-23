@@ -28,7 +28,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
-      body: MessagesContent(chat: widget.chat),
+      body: MessagesContent(evento: widget.evento),
     );
   }
 
