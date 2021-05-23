@@ -45,7 +45,7 @@ class ChatCard extends StatelessWidget {
                 Opacity(
                   opacity: 0.64,
                   child: Text(
-                    chat['lastMessage']['message'],
+                    chat['lastMessage']['text'],
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
