@@ -43,6 +43,12 @@ class _AddEventInvitesState extends State<AddEventInvites> {
   Evento new_event;
   List<String> invitedUsers = <String>[];
 
+  final defaultMap = {
+    "date": null,
+    "sender": "",
+    "text": "Seja o primeiro a conversar!"
+  };
+
   var _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   Random _rnd = Random();
   String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
@@ -194,6 +200,7 @@ class _AddEventInvitesState extends State<AddEventInvites> {
                 context, new_event.imagem, event_image_id);
             DocumentReference chatRef =
                 FirebaseFirestore.instance.collection("Chats").doc();
+            chatRef.set({"lastMessage": defaultMap});
             String event_id = getRandomString(20);
             FirebaseFirestore.instance.collection("Eventos").doc(event_id).set({
               "nome": new_event.nome,
