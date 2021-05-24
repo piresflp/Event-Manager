@@ -4,11 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'InviteContent.dart';
 
+var idFunc = 'JIL8fXU6qSO7ilMhyl6U0nbgvQk2';
+
 Widget listInvites() {
   return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection("Convites")
-          .where('idFuncionario', isEqualTo: 'JIL8fXU6qSO7ilMhyl6U0nbgvQk2')
+          .where('idFuncionario', isEqualTo: idFunc)
           .where('confirmado', isNull: true)
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {

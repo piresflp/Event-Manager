@@ -31,7 +31,6 @@ Widget eventItem(invite, index) {
     future: Api.eventData(invite['eventoRef']),
     builder: (BuildContext context, AsyncSnapshot<dynamic> uData) {
       var evento = uData.data();
-      debugPrint(evento.toString());
 
       return EventContent(
           dia: evento['dia'],
