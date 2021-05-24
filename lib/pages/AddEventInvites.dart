@@ -199,11 +199,78 @@ class _AddEventInvitesState extends State<AddEventInvites> {
         });
   }
 
+  Widget get_all_teams() {
+    return StreamBuilder(
+        stream:
+            FirebaseFirestore.instance.collection("Departamentos").snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return RichText(
+              text: TextSpan(
+                  children: [TextSpan(text: "Nenhuma equipe disponível.")]),
+            );
+          } else {
+            List<Map> teams = <Map>[];
+            for (int i = 0; i < snapshot.data!.docs.length; i++) {
+              dynamic departament = snapshot.data!.docs[i];
+              for (int e = 0; e < departament.data()!["equipes"].length; e++) {
+                teams.add(departament.data()!["equipes"][e]);
+              }
+            }
+            return Column(
+                children: List.generate(teams.length, (index) {
+              dynamic team = teams[index];
+              bool? _isSelected = false;
+              return StatefulBuilder(builder: (context, setState) {
+                return CheckboxListTile(
+                  title: Container(
+                      child: Row(
+                    children: [
+                      CircleAvatar(
+                          radius: 20,
+                          backgroundImage: NetworkImage(
+                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZQCLbiClu1TVwLLPs9Dwnbbo_oFQsKSrpIw&usqp=CAU",
+                              scale: 0.4)),
+                      SizedBox(width: distance_center_text),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(team["nome"]),
+                          Text("Funcionarios na equipe: " +
+                              team["funcionarios"].length.toString())
+                        ],
+                      )
+                    ],
+                  )),
+                  value: _isSelected,
+                  onChanged: (newValue) {
+                    if (newValue == true) {
+                      for (int i = 0; i < team["funcionarios"].length; i++) {
+                        invitedUsers.add(team["funcionarios"][0].id);
+                      }
+                    } else {
+                      for (int i = 0; i < team["funcionarios"].length; i++) {
+                        invitedUsers.remove(team["funcionarios"][0].id);
+                      }
+                    }
+                    setState(() {
+                      _isSelected = newValue;
+                    });
+                  },
+                );
+              });
+            }));
+          }
+        });
+  }
+
   Widget list(String filter) {
-    if (filter == "funcionarios") {
-      return get_all_funcs();
-    } else {
+    if (filter == "times") {
+      return get_all_teams();
+    } else if (filter == "departamentos") {
       return get_all_depts();
+    } else {
+      return get_all_funcs();
     }
   }
 
@@ -246,7 +313,10 @@ class _AddEventInvitesState extends State<AddEventInvites> {
                   label: const Text('Funcionários'),
                 ),
                 InputChip(
-                  onPressed: () => filter_list = "times",
+                  onPressed: () {
+                    filter_list = "times";
+                    (context as Element).reassemble();
+                  },
                   avatar: CircleAvatar(
                     backgroundColor: Colors.grey.shade800,
                     child: const Icon(Icons.people),
