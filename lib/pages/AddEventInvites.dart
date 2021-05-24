@@ -81,7 +81,7 @@ class _AddEventInvitesState extends State<AddEventInvites> {
     return people_list;
   }
 
-  Widget list(String filter) {
+  Widget get_all_funcs() {
     return StreamBuilder(
         stream: getFuncionarios(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -132,6 +132,81 @@ class _AddEventInvitesState extends State<AddEventInvites> {
         });
   }
 
+  Widget get_all_depts() {
+    return StreamBuilder(
+        stream:
+            FirebaseFirestore.instance.collection("Departamentos").snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return RichText(
+              text: TextSpan(children: [
+                TextSpan(text: "Nenhuma departamento disponível.")
+              ]),
+            );
+          } else {
+            return Column(
+                children: List.generate(snapshot.data!.docs.length, (index) {
+              dynamic departament = snapshot.data!.docs[index];
+              bool? _isSelected = false;
+              return StatefulBuilder(builder: (context, setState) {
+                return CheckboxListTile(
+                  title: Container(
+                      child: Row(
+                    children: [
+                      CircleAvatar(
+                          radius: 20,
+                          backgroundImage: NetworkImage(
+                              departament.data()!["urlFoto"],
+                              scale: 0.4)),
+                      SizedBox(width: distance_center_text),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(departament.data()!["nome"]),
+                          Text("Quantidade de equipes: " +
+                              departament.data()!["equipes"].length.toString())
+                        ],
+                      )
+                    ],
+                  )),
+                  value: _isSelected,
+                  onChanged: (newValue) {
+                    if (newValue == true) {
+                      for (int i = 0;
+                          i < departament.data()!["equipes"].length;
+                          i++) {
+                        invitedUsers.add(departament
+                            .data()!["equipes"][i]["funcionarios"][0]
+                            .id);
+                      }
+                    } else {
+                      for (int i = 0;
+                          i < departament.data()!["equipes"].length;
+                          i++) {
+                        invitedUsers.remove(departament
+                            .data()!["equipes"][i]["funcionarios"][0]
+                            .id);
+                      }
+                    }
+                    setState(() {
+                      _isSelected = newValue;
+                    });
+                  },
+                );
+              });
+            }));
+          }
+        });
+  }
+
+  Widget list(String filter) {
+    if (filter == "funcionarios") {
+      return get_all_funcs();
+    } else {
+      return get_all_depts();
+    }
+  }
+
   Future uploadImageToFirebase(
       BuildContext context, String image_path, String image_name) async {
     File image_file = File(image_path);
@@ -155,33 +230,42 @@ class _AddEventInvitesState extends State<AddEventInvites> {
       body: SingleChildScrollView(
           child: Column(
         children: [
-          Row(
-            children: [
-              InputChip(
-                onPressed: () => filter_list = "funcionarios",
-                avatar: CircleAvatar(
-                  backgroundColor: Colors.grey.shade800,
-                  child: const Icon(Icons.person),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                InputChip(
+                  onPressed: () {
+                    filter_list = "funcionarios";
+                    (context as Element).reassemble();
+                  },
+                  avatar: CircleAvatar(
+                    backgroundColor: Colors.grey.shade800,
+                    child: const Icon(Icons.person),
+                  ),
+                  label: const Text('Funcionários'),
                 ),
-                label: const Text('Funcionários'),
-              ),
-              InputChip(
-                onPressed: () => filter_list = "times",
-                avatar: CircleAvatar(
-                  backgroundColor: Colors.grey.shade800,
-                  child: const Icon(Icons.people),
+                InputChip(
+                  onPressed: () => filter_list = "times",
+                  avatar: CircleAvatar(
+                    backgroundColor: Colors.grey.shade800,
+                    child: const Icon(Icons.people),
+                  ),
+                  label: const Text('Times'),
                 ),
-                label: const Text('Times'),
-              ),
-              InputChip(
-                onPressed: () => filter_list = "departamentos",
-                avatar: CircleAvatar(
-                  backgroundColor: Colors.grey.shade800,
-                  child: const Icon(Icons.groups),
+                InputChip(
+                  onPressed: () {
+                    filter_list = "departamentos";
+                    (context as Element).reassemble();
+                  },
+                  avatar: CircleAvatar(
+                    backgroundColor: Colors.grey.shade800,
+                    child: const Icon(Icons.groups),
+                  ),
+                  label: const Text('Depertamentos'),
                 ),
-                label: const Text('Depertamentos'),
-              ),
-            ],
+              ],
+            ),
           ),
           Center(
             child: Column(
@@ -209,7 +293,7 @@ class _AddEventInvitesState extends State<AddEventInvites> {
               "idOrganizador": new_event.idOrganizador,
               "local": new_event.local,
               "tipo": new_event.tipo,
-              "image": stored_image,
+              "imagem": stored_image,
               "chat": chatRef
             });
             DocumentReference docRef =
