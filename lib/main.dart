@@ -1,5 +1,5 @@
+import 'package:Even7/pages/EventDetails/EventDetailsPage.dart';
 import 'package:Even7/theme/colors.dart';
-
 import 'LoginPage.dart';
 import 'pages/RootApp.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +15,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Even7',
-      initialRoute: '/login',
-      routes: {'/': (context) => RootApp(), '/login': (context) => LoginPage()},
+      initialRoute: '/',
+      routes: {
+        '/': (context) => EventDetailsPage(),
+        '/login': (context) => LoginPage()
+      },
       theme: ThemeData(
         primarySwatch: Colors.lightBlue,
       ),
