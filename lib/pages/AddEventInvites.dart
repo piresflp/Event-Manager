@@ -205,17 +205,26 @@ class _AddEventInvitesState extends State<AddEventInvites> {
                       for (int i = 0;
                           i < departament.data()!["equipes"].length;
                           i++) {
-                        invitedUsers.add(departament
-                            .data()!["equipes"][i]["funcionarios"][0]
-                            .id);
+                        if (departament
+                                .data()!["equipes"][i]["funcionarios"][0]
+                                .id !=
+                            idUser) {
+                          invitedUsers.add(departament
+                              .data()!["equipes"][i]["funcionarios"][0]
+                              .id);
+                        }
                       }
                     } else {
                       for (int i = 0;
                           i < departament.data()!["equipes"].length;
                           i++) {
-                        invitedUsers.remove(departament
-                            .data()!["equipes"][i]["funcionarios"][0]
-                            .id);
+                        if (departament
+                                .data()!["equipes"][i]["funcionarios"][0]
+                                .id !=
+                            idUser) {
+                          invitedUsers.remove(departament
+                              .data()!["equipes"][i]["funcionarios"][0]
+                              .id);
                       }
                     }
                     setState(() {
@@ -283,11 +292,18 @@ class _AddEventInvitesState extends State<AddEventInvites> {
                   onChanged: (newValue) {
                     if (newValue == true) {
                       for (int i = 0; i < team["funcionarios"].length; i++) {
-                        invitedUsers.add(team["funcionarios"][0].id);
+                        if(team["funcionarios"][0].id != idUser)
+                        {
+                          invitedUsers.add(team["funcionarios"][0].id); 
+                        }
+                        
                       }
                     } else {
                       for (int i = 0; i < team["funcionarios"].length; i++) {
-                        invitedUsers.remove(team["funcionarios"][0].id);
+                        if(team["funcionarios"][0].id != idUser)
+                        {
+                          invitedUsers.remove(team["funcionarios"][0].id); 
+                        }
                       }
                     }
                     setState(() {
