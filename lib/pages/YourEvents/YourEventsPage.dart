@@ -1,3 +1,4 @@
+import 'package:Even7/utils/Api.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'Widgets/ListYourEvents.dart';
@@ -9,13 +10,22 @@ class YourEvents extends StatefulWidget {
 }
 
 class _YourEventsState extends State<YourEvents> {
-  @override
-  void initState() {
-    super.initState();
+  String idUser = "";
 
+  Future getId() async {
+    String id = await Api.getId();
+    setState(() {
+      idUser = id;
+    });
+  }
+
+  @override
+  initState() {
+    super.initState();
     Firebase.initializeApp().whenComplete(() {
       setState(() {});
     });
+    getId();
   }
 
   @override
@@ -65,7 +75,7 @@ class _YourEventsState extends State<YourEvents> {
                                           fontWeight: FontWeight.bold,
                                         )),
                                     SizedBox(height: 20),
-                                    listYourEvents(),
+                                    listYourEvents(idUser),
                                     SizedBox(height: 40),
                                     Text("Próximos eventos",
                                         style: TextStyle(
@@ -74,7 +84,7 @@ class _YourEventsState extends State<YourEvents> {
                                           fontWeight: FontWeight.bold,
                                         )),
                                     SizedBox(height: 20),
-                                    listNextEvents(),
+                                    listNextEvents(idUser),
                                   ],
                                 ),
                               ),

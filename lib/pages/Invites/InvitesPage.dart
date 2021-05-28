@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 
 import 'ListInvites.dart';
 
-var idUser = 'JIL8fXU6qSO7ilMhyl6U0nbgvQk2';
+//var idUser = 'JIL8fXU6qSO7ilMhyl6U0nbgvQk2';
 
 class InvitesPage extends StatefulWidget {
   @override
@@ -16,12 +16,20 @@ class InvitesPage extends StatefulWidget {
 }
 
 class _InvitesPageState extends State<InvitesPage> {
+  String idUser = '';
+
+  Future getId() async {
+    String id = await Api.getId();
+    setState(() {
+      idUser = id;
+    });
+  }
+
   @override
   initState() {
     super.initState();
-    Firebase.initializeApp().whenComplete(() {
-      setState(() {});
-    });
+    Firebase.initializeApp().whenComplete(() => setState(() {}));
+    getId();
   }
 
   void makeToast(var text) {
@@ -66,7 +74,7 @@ class _InvitesPageState extends State<InvitesPage> {
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.all(30),
-                        child: listInvites(),
+                        child: listInvites(idUser),
                       ),
                     ],
                   ),

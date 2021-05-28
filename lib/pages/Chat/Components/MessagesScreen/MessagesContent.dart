@@ -6,17 +6,31 @@ import 'package:flutter/material.dart';
 
 import 'ChatMessage.dart';
 
-var idFunc = 'JIL8fXU6qSO7ilMhyl6U0nbgvQk2';
-
 class MessagesContent extends StatefulWidget {
   final dynamic evento;
-  MessagesContent({this.evento});
+  final String idFunc;
+  const MessagesContent({this.evento, required this.idFunc});
 
   @override
   _MessagesContentState createState() => _MessagesContentState();
 }
 
 class _MessagesContentState extends State<MessagesContent> {
+  late String apelido;
+
+  @override
+  void initState() async {
+    super.initState();
+
+    var funcSn = await FirebaseFirestore.instance
+        .collection('Funcionarios')
+        .doc(widget.idFunc)
+        .get();
+
+    var func = funcSn.data();
+    apelido = funcSn['apelido'];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -26,22 +40,28 @@ class _MessagesContentState extends State<MessagesContent> {
           padding: EdgeInsets.symmetric(horizontal: kDefaultPadding),
           child: generateMessages(widget.evento),
         )),
-        ChatInputField(chat: widget.evento['chat']),
+        ChatInputField(
+            chat: widget.evento['chat'],
+            idFunc: widget.idFunc,
+            apelido: apelido),
       ],
     );
   }
-}
 
-Widget generateMessages(evento) {
-  return StreamBuilder(
-      stream: evento['chat'].collection('messages').orderBy('date').snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        var messages = snapshot.data!.docs;
-        return ListView.builder(
-            itemCount: messages.length,
-            itemBuilder: (context, index) =>
-                ChatMessage(message: messages[index].data()));
-      });
+  Widget generateMessages(evento) {
+    return StreamBuilder(
+        stream:
+            evento['chat'].collection('messages').orderBy('date').snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          var messages = snapshot.data!.docs;
+          return ListView.builder(
+              itemCount: messages.length,
+              itemBuilder: (context, index) => ChatMessage(
+                    message: messages[index].data(),
+                    idFunc: widget.idFunc,
+                  ));
+        });
+  }
 }
 
 /*
