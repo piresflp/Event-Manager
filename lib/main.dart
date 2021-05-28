@@ -15,11 +15,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Even7',
-      initialRoute: '/',
-      routes: {
-        '/': (context) => EventDetailsPage(),
-        '/login': (context) => LoginPage()
-      },
+      initialRoute: '/login',
+      routes: {'/': (context) => RootApp(), '/login': (context) => LoginPage()},
       theme: ThemeData(
         primarySwatch: Colors.lightBlue,
       ),

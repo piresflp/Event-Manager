@@ -38,6 +38,7 @@ class _AddEventInvitesState extends State<AddEventInvites> {
   var searchBar;
   String filter_list = "funcionarios";
   String stored_image = "";
+  String search_bar_filter = "no-filter";
   double distance_center_text = 0;
 
   Evento new_event;
@@ -64,8 +65,12 @@ class _AddEventInvitesState extends State<AddEventInvites> {
     searchBar = SearchBar(
         inBar: false,
         setState: setState,
-        onSubmitted: print,
-        buildDefaultAppBar: buildAppBar);
+        closeOnSubmit: true,
+        onSubmitted: (value) {
+          search_bar_filter = value;
+        },
+        buildDefaultAppBar: buildAppBar,
+        showClearButton: true);
   }
 
   AppBar buildAppBar(BuildContext context) {
@@ -74,16 +79,23 @@ class _AddEventInvitesState extends State<AddEventInvites> {
         actions: [searchBar.getSearchAction(context)]);
   }
 
-  Stream<QuerySnapshot> getFuncionarios() {
+  Stream<QuerySnapshot> getFuncionarios(filter) {
     var people_list;
-    people_list =
-        FirebaseFirestore.instance.collection("Funcionarios").snapshots();
+    if (filter == "no-filter") {
+      people_list =
+          FirebaseFirestore.instance.collection("Funcionarios").snapshots();
+    } else {
+      people_list = FirebaseFirestore.instance
+          .collection("Funcionarios")
+          .where('apelido', isEqualTo: filter)
+          .snapshots();
+    }
     return people_list;
   }
 
-  Widget get_all_funcs() {
+  Widget get_all_funcs(filter) {
     return StreamBuilder(
-        stream: getFuncionarios(),
+        stream: getFuncionarios(filter),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return RichText(
@@ -132,10 +144,23 @@ class _AddEventInvitesState extends State<AddEventInvites> {
         });
   }
 
-  Widget get_all_depts() {
+  Stream<QuerySnapshot> getDepartamentos(filter) {
+    var departament_list;
+    if (filter == "no-filter") {
+      departament_list =
+          FirebaseFirestore.instance.collection("Departamentos").snapshots();
+    } else {
+      departament_list = FirebaseFirestore.instance
+          .collection("Departamentos")
+          .where('nome', isEqualTo: filter)
+          .snapshots();
+    }
+    return departament_list;
+  }
+
+  Widget get_all_depts(filter) {
     return StreamBuilder(
-        stream:
-            FirebaseFirestore.instance.collection("Departamentos").snapshots(),
+        stream: getDepartamentos(filter),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return RichText(
@@ -199,10 +224,17 @@ class _AddEventInvitesState extends State<AddEventInvites> {
         });
   }
 
-  Widget get_all_teams() {
+  Stream<QuerySnapshot> getTimes(filter) {
+    var times_list;
+    times_list =
+        FirebaseFirestore.instance.collection("Departamentos").snapshots();
+
+    return times_list;
+  }
+
+  Widget get_all_teams(filter) {
     return StreamBuilder(
-        stream:
-            FirebaseFirestore.instance.collection("Departamentos").snapshots(),
+        stream: getTimes(filter),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return RichText(
@@ -266,11 +298,11 @@ class _AddEventInvitesState extends State<AddEventInvites> {
 
   Widget list(String filter) {
     if (filter == "times") {
-      return get_all_teams();
+      return get_all_teams(search_bar_filter);
     } else if (filter == "departamentos") {
-      return get_all_depts();
+      return get_all_depts(search_bar_filter);
     } else {
-      return get_all_funcs();
+      return get_all_funcs(search_bar_filter);
     }
   }
 
@@ -304,6 +336,7 @@ class _AddEventInvitesState extends State<AddEventInvites> {
                 InputChip(
                   onPressed: () {
                     filter_list = "funcionarios";
+                    search_bar_filter = "no-filter";
                     (context as Element).reassemble();
                   },
                   avatar: CircleAvatar(
@@ -315,6 +348,7 @@ class _AddEventInvitesState extends State<AddEventInvites> {
                 InputChip(
                   onPressed: () {
                     filter_list = "times";
+                    search_bar_filter = "no-filter";
                     (context as Element).reassemble();
                   },
                   avatar: CircleAvatar(
@@ -326,6 +360,7 @@ class _AddEventInvitesState extends State<AddEventInvites> {
                 InputChip(
                   onPressed: () {
                     filter_list = "departamentos";
+                    search_bar_filter = "no-filter";
                     (context as Element).reassemble();
                   },
                   avatar: CircleAvatar(
