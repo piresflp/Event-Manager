@@ -1,5 +1,5 @@
-name: eventmanager
-description: A new Flutter project.
+name: Even7
+description: An event manager.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -40,6 +40,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_search_bar: ^2.1.0
   file_picker: ^3.0.1
+  rxdart: ^0.27.0
 
 dev_dependencies:
   flutter_test:

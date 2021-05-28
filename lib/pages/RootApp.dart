@@ -1,11 +1,10 @@
-import 'package:eventmanager/pages/AddEvent.dart';
-import 'package:eventmanager/pages/Invites.dart';
-import 'package:eventmanager/pages/YourEvents.dart';
+import 'AddEvent.dart';
+import 'Chat/ChatPage.dart';
+import 'Invites/InvitesPage.dart';
+import 'YourEvents/YourEventsPage.dart';
+import '../theme/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:eventmanager/theme/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-import '../LoginPage.dart';
 
 class RootApp extends StatefulWidget {
   @override
@@ -24,7 +23,7 @@ class _RootAppState extends State<RootApp> {
   }
 
   Widget getBody() {
-    List<Widget> pages = [Invites(), AddEvent(), YourEvents()];
+    List<Widget> pages = [InvitesPage(), AddEvent(), YourEvents(), ChatPage()];
 
     return IndexedStack(
       index: pageIndex,
@@ -37,8 +36,9 @@ class _RootAppState extends State<RootApp> {
       "assets/images/Invite.svg",
       "assets/images/Add.svg",
       "assets/images/Calendar.svg",
+      "assets/images/Calendar.svg"
     ];
-    List textItems = ["Convites", "Criar", "Seus Eventos"];
+    List textItems = ["Convites", "Criar", "Seus Eventos", "Chat"];
     return Container(
       width: double.infinity,
       height: 75,
