@@ -16,19 +16,26 @@ class MessagesContent extends StatefulWidget {
 }
 
 class _MessagesContentState extends State<MessagesContent> {
-  late String apelido;
+  String apelido = "";
 
-  @override
-  void initState() async {
-    super.initState();
-
-    var funcSn = await FirebaseFirestore.instance
+  getApelido() async {
+    var documentSnapshot = await FirebaseFirestore.instance
         .collection('Funcionarios')
         .doc(widget.idFunc)
         .get();
 
-    var func = funcSn.data();
-    apelido = funcSn['apelido'];
+    var funcData = documentSnapshot.data()!;
+    var ape = funcData['apelido'];
+
+    setState(() {
+      apelido = ape;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getApelido();
   }
 
   @override
