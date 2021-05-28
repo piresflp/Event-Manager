@@ -41,6 +41,8 @@ class _AddEventInvitesState extends State<AddEventInvites> {
   String search_bar_filter = "no-filter";
   double distance_center_text = 0;
 
+  String idUser = "JIL8fXU6qSO7ilMhyl6U0nbgvQk2";
+
   Evento new_event;
   List<String> invitedUsers = <String>[];
 
@@ -82,12 +84,15 @@ class _AddEventInvitesState extends State<AddEventInvites> {
   Stream<QuerySnapshot> getFuncionarios(filter) {
     var people_list;
     if (filter == "no-filter") {
-      people_list =
-          FirebaseFirestore.instance.collection("Funcionarios").snapshots();
+      people_list = FirebaseFirestore.instance
+          .collection("Funcionarios")
+          .where(FieldPath.documentId, isNotEqualTo: idUser)
+          .snapshots();
     } else {
       people_list = FirebaseFirestore.instance
           .collection("Funcionarios")
           .where('apelido', isEqualTo: filter)
+          .where(FieldPath.documentId, isNotEqualTo: idUser)
           .snapshots();
     }
     return people_list;
