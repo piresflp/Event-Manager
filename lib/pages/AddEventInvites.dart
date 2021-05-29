@@ -175,65 +175,72 @@ class _AddEventInvitesState extends State<AddEventInvites> {
             );
           } else {
             return Column(
-                children: List.generate(snapshot.data!.docs.length, (index) {
-              dynamic departament = snapshot.data!.docs[index];
-              bool? _isSelected = false;
-              return StatefulBuilder(builder: (context, setState) {
-                return CheckboxListTile(
-                  title: Container(
-                      child: Row(
-                    children: [
-                      CircleAvatar(
-                          radius: 20,
-                          backgroundImage: NetworkImage(
-                              departament.data()!["urlFoto"],
-                              scale: 0.4)),
-                      SizedBox(width: distance_center_text),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(departament.data()!["nome"]),
-                          Text("Quantidade de equipes: " +
-                              departament.data()!["equipes"].length.toString())
-                        ],
-                      )
-                    ],
-                  )),
-                  value: _isSelected,
-                  onChanged: (newValue) {
-                    if (newValue == true) {
-                      for (int i = 0;
-                          i < departament.data()!["equipes"].length;
-                          i++) {
-                        if (departament
+                children: List.generate(
+              snapshot.data!.docs.length,
+              (index) {
+                dynamic departament = snapshot.data!.docs[index];
+                bool? _isSelected = false;
+                return StatefulBuilder(builder: (context, setState) {
+                  return CheckboxListTile(
+                    title: Container(
+                        child: Row(
+                      children: [
+                        CircleAvatar(
+                            radius: 20,
+                            backgroundImage: NetworkImage(
+                                departament.data()!["urlFoto"],
+                                scale: 0.4)),
+                        SizedBox(width: distance_center_text),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(departament.data()!["nome"]),
+                            Text("Quantidade de equipes: " +
+                                departament
+                                    .data()!["equipes"]
+                                    .length
+                                    .toString())
+                          ],
+                        )
+                      ],
+                    )),
+                    value: _isSelected,
+                    onChanged: (newValue) {
+                      if (newValue == true) {
+                        for (int i = 0;
+                            i < departament.data()!["equipes"].length;
+                            i++) {
+                          if (departament
+                                  .data()!["equipes"][i]["funcionarios"][0]
+                                  .id !=
+                              idUser) {
+                            invitedUsers.add(departament
                                 .data()!["equipes"][i]["funcionarios"][0]
-                                .id !=
-                            idUser) {
-                          invitedUsers.add(departament
-                              .data()!["equipes"][i]["funcionarios"][0]
-                              .id);
+                                .id);
+                          }
                         }
-                      }
-                    } else {
-                      for (int i = 0;
-                          i < departament.data()!["equipes"].length;
-                          i++) {
-                        if (departament
+                      } else {
+                        for (int i = 0;
+                            i < departament.data()!["equipes"].length;
+                            i++) {
+                          if (departament
+                                  .data()!["equipes"][i]["funcionarios"][0]
+                                  .id !=
+                              idUser) {
+                            invitedUsers.remove(departament
                                 .data()!["equipes"][i]["funcionarios"][0]
-                                .id !=
-                            idUser) {
-                          invitedUsers.remove(departament
-                              .data()!["equipes"][i]["funcionarios"][0]
-                              .id);
+                                .id);
+                          }
+                        }
+                        setState(() {
+                          _isSelected = newValue;
+                        });
                       }
-                    }
-                    setState(() {
-                      _isSelected = newValue;
-                    });
-                  },
-                );
-              });
-            }));
+                    },
+                  );
+                });
+              },
+            ));
           }
         });
   }
@@ -292,17 +299,14 @@ class _AddEventInvitesState extends State<AddEventInvites> {
                   onChanged: (newValue) {
                     if (newValue == true) {
                       for (int i = 0; i < team["funcionarios"].length; i++) {
-                        if(team["funcionarios"][0].id != idUser)
-                        {
-                          invitedUsers.add(team["funcionarios"][0].id); 
+                        if (team["funcionarios"][0].id != idUser) {
+                          invitedUsers.add(team["funcionarios"][0].id);
                         }
-                        
                       }
                     } else {
                       for (int i = 0; i < team["funcionarios"].length; i++) {
-                        if(team["funcionarios"][0].id != idUser)
-                        {
-                          invitedUsers.remove(team["funcionarios"][0].id); 
+                        if (team["funcionarios"][0].id != idUser) {
+                          invitedUsers.remove(team["funcionarios"][0].id);
                         }
                       }
                     }
