@@ -2,28 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_search_bar/flutter_search_bar.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'dart:io';
-
-class Evento {
-  final String nome;
-  final String dia;
-  final String hora;
-  final String local;
-  final String tipo;
-  final String idOrganizador;
-  final String imagem;
-
-  const Evento({
-    this.nome = "",
-    this.dia = "",
-    this.hora = "",
-    this.local = "",
-    this.tipo = "",
-    this.idOrganizador = "",
-    this.imagem = "",
-  });
-}
+import 'Evento.dart';
+import 'FirebaseConections.dart';
+import 'package:Even7/utils/Api.dart';
 
 class AddEventInvites extends StatefulWidget {
   final Evento data;
@@ -37,14 +18,29 @@ class AddEventInvites extends StatefulWidget {
 class _AddEventInvitesState extends State<AddEventInvites> {
   var searchBar;
   String filter_list = "funcionarios";
-  String stored_image = "";
+  String stored_image =
+      "https://blog.e-inscricao.com/wp-content/uploads/2017/03/como-manter-a-organizacao-de-um-evento-enquanto-ele-e-realizado.jpeg";
   String search_bar_filter = "no-filter";
   double distance_center_text = 0;
 
-  String idUser = "JIL8fXU6qSO7ilMhyl6U0nbgvQk2";
+  String idUser = "";
 
   Evento new_event;
   List<String> invitedUsers = <String>[];
+
+  Future getId() async {
+    String id = await Api.getId();
+    setState(() {
+      idUser = id;
+      FirebaseConections.setUserId(idUser);
+    });
+  }
+
+  @override
+  initState() {
+    super.initState();
+    getId();
+  }
 
   final defaultMap = {
     "date": null,
@@ -81,26 +77,9 @@ class _AddEventInvitesState extends State<AddEventInvites> {
         actions: [searchBar.getSearchAction(context)]);
   }
 
-  Stream<QuerySnapshot> getFuncionarios(filter) {
-    var people_list;
-    if (filter == "no-filter") {
-      people_list = FirebaseFirestore.instance
-          .collection("Funcionarios")
-          .where(FieldPath.documentId, isNotEqualTo: idUser)
-          .snapshots();
-    } else {
-      people_list = FirebaseFirestore.instance
-          .collection("Funcionarios")
-          .where('apelido', isEqualTo: filter)
-          .where(FieldPath.documentId, isNotEqualTo: idUser)
-          .snapshots();
-    }
-    return people_list;
-  }
-
   Widget get_all_funcs(filter) {
     return StreamBuilder(
-        stream: getFuncionarios(filter),
+        stream: FirebaseConections.getFuncionarios(filter),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return RichText(
@@ -149,23 +128,9 @@ class _AddEventInvitesState extends State<AddEventInvites> {
         });
   }
 
-  Stream<QuerySnapshot> getDepartamentos(filter) {
-    var departament_list;
-    if (filter == "no-filter") {
-      departament_list =
-          FirebaseFirestore.instance.collection("Departamentos").snapshots();
-    } else {
-      departament_list = FirebaseFirestore.instance
-          .collection("Departamentos")
-          .where('nome', isEqualTo: filter)
-          .snapshots();
-    }
-    return departament_list;
-  }
-
   Widget get_all_depts(filter) {
     return StreamBuilder(
-        stream: getDepartamentos(filter),
+        stream: FirebaseConections.getDepartamentos(filter),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return RichText(
@@ -245,17 +210,9 @@ class _AddEventInvitesState extends State<AddEventInvites> {
         });
   }
 
-  Stream<QuerySnapshot> getTimes(filter) {
-    var times_list;
-    times_list =
-        FirebaseFirestore.instance.collection("Departamentos").snapshots();
-
-    return times_list;
-  }
-
   Widget get_all_teams(filter) {
     return StreamBuilder(
-        stream: getTimes(filter),
+        stream: FirebaseConections.getTimes(filter),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return RichText(
@@ -331,20 +288,6 @@ class _AddEventInvitesState extends State<AddEventInvites> {
     }
   }
 
-  Future uploadImageToFirebase(
-      BuildContext context, String image_path, String image_name) async {
-    File image_file = File(image_path);
-    Reference firebaseStorageRef =
-        FirebaseStorage.instance.ref().child('event_images/$image_name');
-    UploadTask uploadTask = firebaseStorageRef.putFile(image_file);
-    await uploadTask.whenComplete(() async {
-      String url = (await firebaseStorageRef.getDownloadURL()).toString();
-      stored_image = url;
-    }).catchError((onError) {
-      print(onError);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     distance_center_text = MediaQuery.of(context).size.height * 3 / 100;
@@ -410,7 +353,7 @@ class _AddEventInvitesState extends State<AddEventInvites> {
         child: ElevatedButton(
           onPressed: () async {
             String event_image_id = getRandomString(20);
-            await uploadImageToFirebase(
+            stored_image = await FirebaseConections.uploadImageToFirebase(
                 context, new_event.imagem, event_image_id);
             DocumentReference chatRef =
                 FirebaseFirestore.instance.collection("Chats").doc();

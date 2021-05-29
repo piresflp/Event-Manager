@@ -2,10 +2,11 @@ import 'package:Even7/theme/colors.dart';
 import 'package:Even7/utils/Api.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:Even7/pages/AddEventInvites.dart';
+import 'package:Even7/pages/CreanteEvents/AddEventInvites.dart';
 import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
+import 'Evento.dart';
 
 class AddEvent extends StatefulWidget {
   @override
