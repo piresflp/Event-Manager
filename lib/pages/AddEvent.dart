@@ -1,4 +1,5 @@
 import 'package:Even7/theme/colors.dart';
+import 'package:Even7/utils/Api.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:Even7/pages/AddEventInvites.dart';
@@ -23,7 +24,20 @@ class _AddEventState extends State<AddEvent> {
   String image_picker =
       "https://img.freepik.com/free-vector/pattern-geometric-line-circle-abstract-seamless-blue-line_60284-53.jpg?size=626&ext=jpg";
 
-  String idUser = "JIL8fXU6qSO7ilMhyl6U0nbgvQk2"; // TODO: trocar idUser
+  String idUser = "";
+
+  Future getId() async {
+    String id = await Api.getId();
+    setState(() {
+      idUser = id;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getId();
+  }
 
   Widget buildDecoration() {
     return Container(

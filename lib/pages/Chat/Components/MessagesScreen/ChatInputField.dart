@@ -2,17 +2,18 @@ import 'package:Even7/theme/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-var idFunc = 'JIL8fXU6qSO7ilMhyl6U0nbgvQk2';
-var apelido = 'Python';
-
 class ChatInputField extends StatelessWidget {
   final TextEditingController txtController = TextEditingController();
   final DocumentReference chat;
+  final String idFunc;
+  final String apelido;
 
-  ChatInputField({
-    Key? key,
-    required this.chat,
-  }) : super(key: key);
+  ChatInputField(
+      {Key? key,
+      required this.chat,
+      required this.idFunc,
+      required this.apelido})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -1,3 +1,5 @@
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'pages/RootApp.dart';
 import 'theme/colors.dart';
 import 'theme/styles.dart';
@@ -45,12 +47,14 @@ class _LoginPageState extends State<LoginPage> {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
 
+      // await FlutterSession().set('id', userCredential.user!.uid.toString());
+
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.setString("id", userCredential.user!.uid.toString());
+
       makeToast("Logado com sucesso");
 
       Navigator.pushNamedAndRemoveUntil(context, "/", (r) => false);
-
-
-
     } on FirebaseAuthException catch (e) {
       String errorText = e.code;
 
@@ -102,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
                           labelText: "Senha",
                           labelStyle: TextStyle(color: black),
                           fillColor: Colors.white,
-                          filled: true),                      
+                          filled: true),
                     ),
                     SizedBox(height: 30),
                     ConstrainedBox(

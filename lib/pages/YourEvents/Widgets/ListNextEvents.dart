@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:Even7/utils/Api.dart';
 import '../Content/EventContent.dart';
 
-Widget listNextEvents() {
+Widget listNextEvents(idFunc) {
   return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection("Convites")
-          .where('idFuncionario', isEqualTo: 'JIL8fXU6qSO7ilMhyl6U0nbgvQk2')
+          .where('idFuncionario', isEqualTo: idFunc)
           .where('confirmado', isEqualTo: true)
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {

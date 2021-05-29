@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../Content/AdmEventContent.dart';
 
-Widget listYourEvents() {
+Widget listYourEvents(idFunc) {
   return StreamBuilder(
-      stream: getData(),
+      stream: getData(idFunc),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) {
           return Container(
@@ -24,9 +24,9 @@ Widget listYourEvents() {
       });
 }
 
-Stream<QuerySnapshot> getData() {
+Stream<QuerySnapshot> getData(idFunc) {
   return FirebaseFirestore.instance
       .collection("Eventos")
-      .where('idOrganizador', isEqualTo: "JIL8fXU6qSO7ilMhyl6U0nbgvQk2")
+      .where('idOrganizador', isEqualTo: idFunc)
       .snapshots();
 }

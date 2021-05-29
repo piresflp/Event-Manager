@@ -1,15 +1,12 @@
 import 'package:Even7/theme/colors.dart';
 import 'package:flutter/material.dart';
 
-var idFunc = 'JIL8fXU6qSO7ilMhyl6U0nbgvQk2';
-
 class ChatMessage extends StatelessWidget {
-  const ChatMessage({
-    Key? key,
-    required this.message,
-  }) : super(key: key);
-
   final dynamic message;
+  final String idFunc;
+
+  const ChatMessage({Key? key, required this.message, required this.idFunc})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
