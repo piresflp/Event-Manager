@@ -1,4 +1,3 @@
-import 'package:Even7/pages/EventDetails/EventDetailsPage.dart';
 import 'package:flutter/material.dart';
 
 Widget TabConfirmados(TabController _tabController, List<Tab> myTabs) {

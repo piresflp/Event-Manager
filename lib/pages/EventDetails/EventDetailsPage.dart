@@ -1,6 +1,7 @@
 import 'package:Even7/pages/EventDetails/TabConfirmados.dart';
 import 'package:Even7/pages/Invites/ListInvites.dart';
 import 'package:Even7/pages/YourEvents/Widgets/ListYourEvents.dart';
+import 'package:Even7/utils/Api.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:Even7/pages/YourEvents/Content/EventContent.dart';
 import 'package:Even7/pages/YourEvents/Widgets/ListNextEvents.dart';
@@ -14,6 +15,14 @@ class EventDetailsPage extends StatefulWidget {
 class _EventDetailsPageState extends State<EventDetailsPage>
     with TickerProviderStateMixin {
   late TabController _tabController;
+  String idFunc = '';
+
+  Future getId() async {
+    String id = await Api.getId();
+    setState(() {
+      idFunc = id;
+    });
+  }
 
   @override
   void initState() {
@@ -24,6 +33,7 @@ class _EventDetailsPageState extends State<EventDetailsPage>
         setState(() {});
       }
     });
+    getId();
   }
 
   @override
@@ -110,7 +120,10 @@ class _EventDetailsPageState extends State<EventDetailsPage>
                         height: 100,
                         child: TabBarView(
                             controller: _tabController,
-                            children: [listYourEvents(), listNextEvents()]),
+                            children: [
+                              listYourEvents(idFunc),
+                              listNextEvents(idFunc)
+                            ]),
                       )
                     ],
                   )),
