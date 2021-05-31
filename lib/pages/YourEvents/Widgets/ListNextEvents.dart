@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:Even7/utils/Api.dart';
+import 'package:Even7/models/Event.dart';
 import '../Content/EventContent.dart';
 
 Widget listNextEvents(idFunc) {
@@ -37,14 +38,11 @@ Widget eventItem(id, event, index) {
         return const Center(child: CircularProgressIndicator());
       }
 
-      var evento = uData.data();
+      var data = uData.data();
+      Event event = Event(id, data['nome'], data['idOrganizador'], data['dia'],
+          data['hora'], data['local'], data['tipo']);
 
-      return EventContent(
-          id: id,
-          dia: evento['dia'],
-          hora: evento['hora'],
-          nome: evento['nome'],
-          numero: index + 1);
+      return EventContent(number: index + 1, event: event);
     },
   );
 }

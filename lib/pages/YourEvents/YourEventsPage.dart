@@ -76,7 +76,7 @@ class _YourEventsState extends State<YourEvents> {
                                         )),
                                     SizedBox(height: 20),
                                     listYourEvents(idUser),
-                                    SizedBox(height: 40),
+                                    SizedBox(height: 20),
                                     Text("Próximos eventos",
                                         style: TextStyle(
                                           fontSize: 22,

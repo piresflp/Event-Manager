@@ -5,12 +5,13 @@ import 'package:Even7/utils/Api.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:Even7/pages/YourEvents/Widgets/ListNextEvents.dart';
 import 'package:flutter/material.dart';
+import 'Widgets/InformationWidget.dart';
 import 'package:Even7/models/Event.dart';
 
 class EventDetailsPage extends StatefulWidget {
-  final String eventId;
+  final Event event;
 
-  EventDetailsPage(this.eventId);
+  EventDetailsPage(this.event);
 
   @override
   _EventDetailsPageState createState() => _EventDetailsPageState();
@@ -20,7 +21,6 @@ class _EventDetailsPageState extends State<EventDetailsPage>
     with TickerProviderStateMixin {
   late TabController _tabController;
   String idUser = "";
-  late final Event evento;
 
   Future getId() async {
     String id = await Api.getId();
@@ -66,43 +66,32 @@ class _EventDetailsPageState extends State<EventDetailsPage>
                         children: <Widget>[
                           SizedBox(height: 25),
                           Text(
-                            widget.eventId == null ? '' : widget.eventId,
+                            widget.event.name == null ? '' : widget.event.name,
                             style: TextStyle(
                               fontSize: 26,
                               color: Color(0xFF0D1333),
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Text("Data Evento",
+                          Text(
+                              widget.event.day +
+                                  " - " +
+                                  widget.event.hour +
+                                  "\n",
                               style: TextStyle(
                                   color: Color(0xFF0D1333).withOpacity(.75),
                                   fontSize: 20)),
                         ])),
                 Padding(
-                  padding: EdgeInsets.only(right: 180, top: 20),
+                  padding: EdgeInsets.only(top: 20),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
-                      Text("Organizador: ",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Color(0xFF0D1333),
-                            fontWeight: FontWeight.bold,
-                          )),
+                      informationWidget("Organizador", widget.event.orgName),
                       SizedBox(height: 20),
-                      Text("Local: ",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Color(0xFF0D1333),
-                            fontWeight: FontWeight.bold,
-                          )),
+                      informationWidget("Local", widget.event.local),
                       SizedBox(height: 20),
-                      Text("Tipo de evento: ",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Color(0xFF0D1333),
-                            fontWeight: FontWeight.bold,
-                          )),
+                      informationWidget("Tipo de evento", widget.event.type),
                       SizedBox(height: 20),
                     ],
                   ),

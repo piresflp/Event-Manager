@@ -13,7 +13,7 @@ class FuncionarioContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 30),
+      padding: const EdgeInsets.only(bottom: 20),
       child: Row(
         children: <Widget>[
           Text(numero.toString(),
