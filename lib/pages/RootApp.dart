@@ -33,10 +33,10 @@ class _RootAppState extends State<RootApp> {
 
   Widget getFooter() {
     List bottomItems = [
-      "assets/images/Invite.svg",
-      "assets/images/Add.svg",
-      "assets/images/Calendar.svg",
-      "assets/images/Calendar.svg"
+      Icons.mail,
+      Icons.add,
+      Icons.calendar_today,
+      Icons.chat
     ];
     List textItems = ["Convites", "Criar", "Seus Eventos", "Chat"];
     return Container(
@@ -59,11 +59,9 @@ class _RootAppState extends State<RootApp> {
                 },
                 child: Column(
                   children: [
-                    SvgPicture.asset(
-                      bottomItems[index],
-                      width: 22,
-                      color: pageIndex == index ? black : Colors.grey,
-                    ),
+                    Icon(bottomItems[index],
+                        size: 22,
+                        color: pageIndex == index ? black : Colors.grey),
                     SizedBox(
                       height: 5,
                     ),
