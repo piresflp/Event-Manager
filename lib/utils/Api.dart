@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:Even7/models/Event.dart';
 
 class Api {
   static Future<dynamic> eventData(DocumentReference event) async {

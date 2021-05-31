@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AdmEventContent extends StatelessWidget {
+  final String id;
   final int numero;
   final String dia;
   final String hora;
@@ -8,6 +9,7 @@ class AdmEventContent extends StatelessWidget {
 
   const AdmEventContent({
     Key? key,
+    this.id = "",
     this.numero = 0,
     this.dia = "",
     this.hora = "",

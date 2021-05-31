@@ -1,10 +1,17 @@
-import 'package:Even7/pages/YourEvents/Widgets/ListYourEvents.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'Widgets/listConvidados.dart';
 import 'package:Even7/utils/Api.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:Even7/pages/YourEvents/Widgets/ListNextEvents.dart';
 import 'package:flutter/material.dart';
+import 'package:Even7/models/Event.dart';
 
 class EventDetailsPage extends StatefulWidget {
+  final String eventId;
+
+  EventDetailsPage(this.eventId);
+
   @override
   _EventDetailsPageState createState() => _EventDetailsPageState();
 }
@@ -13,6 +20,7 @@ class _EventDetailsPageState extends State<EventDetailsPage>
     with TickerProviderStateMixin {
   late TabController _tabController;
   String idUser = "";
+  late final Event evento;
 
   Future getId() async {
     String id = await Api.getId();
@@ -20,6 +28,13 @@ class _EventDetailsPageState extends State<EventDetailsPage>
       idUser = id;
     });
   }
+
+  /*Future getEventData() async {
+    Event umEvento = await Api.getEventData(widget.eventId);
+    setState(() {
+      evento = umEvento;
+    });
+  }*/
 
   @override
   void initState() {
@@ -51,7 +66,7 @@ class _EventDetailsPageState extends State<EventDetailsPage>
                         children: <Widget>[
                           SizedBox(height: 25),
                           Text(
-                            "Título Evento",
+                            widget.eventId == null ? '' : widget.eventId,
                             style: TextStyle(
                               fontSize: 26,
                               color: Color(0xFF0D1333),
@@ -124,7 +139,7 @@ class _EventDetailsPageState extends State<EventDetailsPage>
                             child: TabBarView(
                                 controller: _tabController,
                                 children: [
-                                  listYourEvents(idUser),
+                                  listConvidados(idUser),
                                   listNextEvents(idUser)
                                 ]),
                           ),

@@ -1,23 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../Content/AdmEventContent.dart';
+import '../Content/FuncionarioContent.dart';
 
-Widget listYourEvents(idFunc) {
+Widget listConvidados(idFunc) {
   return StreamBuilder(
       stream: getData(idFunc),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) {
-          return Container(
-              child: Text("Parece que você não tem nenhum novo evento =("));
+          return Container(child: Text("Nenhum convidado."));
         } else {
           return Column(
               children: List.generate(snapshot.data!.docs.length, (index) {
             dynamic evento = snapshot.data!.docs[index].data()!;
-            return AdmEventContent(
-              id: evento["id"],
+            return FuncionarioContent(
               numero: (index + 1),
-              dia: evento["dia"],
-              hora: evento["hora"],
               nome: evento["nome"],
             );
           }));

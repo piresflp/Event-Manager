@@ -1,6 +1,8 @@
+import 'package:Even7/pages/EventDetails/EventDetailsPage.dart';
 import 'package:flutter/material.dart';
 
 class EventContent extends StatelessWidget {
+  final String id;
   final int numero;
   final String dia;
   final String hora;
@@ -8,6 +10,7 @@ class EventContent extends StatelessWidget {
 
   const EventContent({
     Key? key,
+    this.id = "",
     this.numero = 0,
     this.dia = "",
     this.hora = "",
@@ -44,13 +47,19 @@ class EventContent extends StatelessWidget {
             ])),
           ),
           Spacer(),
-          Container(
-            margin: EdgeInsets.only(left: 8),
-            height: 40,
-            width: 40,
-            decoration:
-                BoxDecoration(shape: BoxShape.circle, color: Color(0xFF49CC96)),
-            child: Icon(Icons.search, color: Colors.white),
+          new GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => EventDetailsPage(id)));
+            },
+            child: new Container(
+              margin: EdgeInsets.only(left: 8),
+              height: 40,
+              width: 40,
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle, color: Color(0xFF49CC96)),
+              child: Icon(Icons.search, color: Colors.white),
+            ),
           )
         ],
       ),

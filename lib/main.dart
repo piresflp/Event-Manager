@@ -23,10 +23,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Even7',
       initialRoute: initialRoute,
-      routes: {
-        '/': (context) => EventDetailsPage(),
-        '/login': (context) => LoginPage()
-      },
+      routes: {'/': (context) => RootApp(), '/login': (context) => LoginPage()},
       theme: ThemeData(
         primarySwatch: Colors.lightBlue,
       ),

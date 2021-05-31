@@ -4,7 +4,6 @@ import 'Invites/InvitesPage.dart';
 import 'YourEvents/YourEventsPage.dart';
 import '../theme/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class RootApp extends StatefulWidget {
   @override
