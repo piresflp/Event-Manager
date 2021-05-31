@@ -1,7 +1,6 @@
 import 'package:Even7/pages/YourEvents/Widgets/ListYourEvents.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:Even7/utils/Api.dart';
-import 'package:Even7/pages/YourEvents/Content/EventContent.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:Even7/pages/YourEvents/Widgets/ListNextEvents.dart';
 import 'package:flutter/material.dart';
 

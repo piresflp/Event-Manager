@@ -71,9 +71,9 @@ class _BodyState extends State<Body> {
             .where('confirmado', isEqualTo: true)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData)
-            return Container(
-              child: Text("No data found"),
+          if (!snapshot.hasData || snapshot.hasError)
+            return Center(
+              child: CircularProgressIndicator(),
             );
           else if (snapshot.data!.docs.length == 0) {
             return Container(
@@ -108,11 +108,18 @@ class _BodyState extends State<Body> {
     return FutureBuilder(
         future: Api.eventData(invite['eventoRef']),
         builder: (BuildContext context, AsyncSnapshot<dynamic> uData) {
+          if (!uData.hasData || uData.hasError) {
+            return Center(child: CircularProgressIndicator());
+          }
+
           var evento = uData.data();
 
           return FutureBuilder(
               future: Api.eventData(evento['chat']),
               builder: (BuildContext context, AsyncSnapshot<dynamic> rawChat) {
+                if (!rawChat.hasData || rawChat.hasError) {
+                  return Center(child: CircularProgressIndicator());
+                }
                 var chat = rawChat.data();
                 return ChatCard(
                     evento: evento,
@@ -133,9 +140,9 @@ class _BodyState extends State<Body> {
             .where('idOrganizador', isEqualTo: idFunc)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData)
-            return Container(
-              child: Text("No data found"),
+          if (!snapshot.hasData || snapshot.hasError)
+            return Center(
+              child: CircularProgressIndicator(),
             );
           else if (snapshot.data!.docs.length == 0) {
             return Container(
@@ -162,6 +169,10 @@ class _BodyState extends State<Body> {
                   future: Api.eventData(evento['chat']),
                   builder:
                       (BuildContext context, AsyncSnapshot<dynamic> rawChat) {
+                    if (!rawChat.hasData || rawChat.hasError)
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
                     var chat = rawChat.data();
                     return ChatCard(
                         evento: evento,
