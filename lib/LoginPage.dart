@@ -17,6 +17,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   TextEditingController txtEmail = TextEditingController();
   TextEditingController txtSenha = TextEditingController();
+  double imgWidth = 300;
+  double imgHeight = 300;
 
   @override
   initState() {
@@ -84,22 +86,40 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Image.network(
-                        "https://raw.githubusercontent.com/piresflp/event-manager/master/assets/images/Even7.png?token=ALKE34IDSJRPM37XT3HTVF3AU65YS"),
+                    AnimatedContainer(
+                      width: imgWidth,
+                      height: imgHeight,
+                      duration: Duration(milliseconds: 30),
+                      child: Image.network(
+                          "https://raw.githubusercontent.com/piresflp/event-manager/master/assets/images/Even7.png?token=ALKE34ILO7TAHVIYD6HOYGLAXYJXQ"),
+                    ),
                     Text("Faça seu login!", style: customTitle),
                     SizedBox(height: 30),
                     TextField(
                       controller: txtEmail,
+                      onTap: () {
+                        setState(() {
+                          imgWidth = 300;
+                          imgHeight = 100;
+                        });
+                      },
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: "Email",
-                          labelStyle: TextStyle(color: black),
-                          fillColor: Colors.white,
-                          filled: true),
+                        border: OutlineInputBorder(),
+                        labelText: "Email",
+                        labelStyle: TextStyle(color: black),
+                        fillColor: Colors.white,
+                        filled: true,
+                      ),
                     ),
                     SizedBox(height: 15),
                     TextField(
                       controller: txtSenha,
+                      onTap: () {
+                        setState(() {
+                          imgWidth = 300;
+                          imgHeight = 100;
+                        });
+                      },
                       obscureText: true,
                       decoration: InputDecoration(
                           border: OutlineInputBorder(),
