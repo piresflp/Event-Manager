@@ -9,6 +9,9 @@ Widget listYourEvents(idFunc) {
         if (!snapshot.hasData) {
           return Container(
               child: Text("Parece que você não tem nenhum novo evento =("));
+        } else if (snapshot.data!.docs.length == 0) {
+          return Container(
+              child: Text("Parece que você não tem nenhum novo evento =("));
         } else {
           return Column(
               children: List.generate(snapshot.data!.docs.length, (index) {

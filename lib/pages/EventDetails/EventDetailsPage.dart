@@ -1,7 +1,6 @@
-import 'package:Even7/pages/EventDetails/TabConfirmados.dart';
-import 'package:Even7/pages/Invites/ListInvites.dart';
 import 'package:Even7/pages/YourEvents/Widgets/ListYourEvents.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:Even7/utils/Api.dart';
 import 'package:Even7/pages/YourEvents/Content/EventContent.dart';
 import 'package:Even7/pages/YourEvents/Widgets/ListNextEvents.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +13,14 @@ class EventDetailsPage extends StatefulWidget {
 class _EventDetailsPageState extends State<EventDetailsPage>
     with TickerProviderStateMixin {
   late TabController _tabController;
+  String idUser = "";
+
+  Future getId() async {
+    String id = await Api.getId();
+    setState(() {
+      idUser = id;
+    });
+  }
 
   @override
   void initState() {
@@ -24,6 +31,7 @@ class _EventDetailsPageState extends State<EventDetailsPage>
         setState(() {});
       }
     });
+    getId();
   }
 
   @override
@@ -31,7 +39,7 @@ class _EventDetailsPageState extends State<EventDetailsPage>
     Firebase.initializeApp().whenComplete(() {
       setState(() {});
     });
-    return Container(
+    return Material(
       child: SafeArea(
           child: Container(
               color: Colors.grey[200],
@@ -92,27 +100,38 @@ class _EventDetailsPageState extends State<EventDetailsPage>
                       borderRadius: BorderRadius.circular(50),
                       color: Colors.white),
                   child: Scaffold(
-                      body: Column(
-                    children: <Widget>[
-                      Container(
-                          child: TabBar(
-                        tabs: myTabs,
-                        unselectedLabelColor: const Color(0xffacb3bf),
-                        indicatorColor: Color(0xFFffac81),
-                        labelColor: Colors.black,
-                        indicatorSize: TabBarIndicatorSize.tab,
-                        indicatorWeight: 3.0,
-                        indicatorPadding: EdgeInsets.all(10),
-                        isScrollable: false,
-                        controller: _tabController,
-                      )),
-                      Container(
-                        height: 100,
-                        child: TabBarView(
-                            controller: _tabController,
-                            children: [listYourEvents(), listNextEvents()]),
-                      )
-                    ],
+                      body: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                            child: TabBar(
+                          tabs: myTabs,
+                          labelStyle: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                          unselectedLabelColor: const Color(0xffacb3bf),
+                          indicatorColor: Colors.black,
+                          labelColor: Colors.black,
+                          indicatorSize: TabBarIndicatorSize.tab,
+                          indicatorWeight: 3.0,
+                          indicatorPadding: EdgeInsets.all(10),
+                          isScrollable: false,
+                          controller: _tabController,
+                        )),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height,
+                          child: Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: TabBarView(
+                                controller: _tabController,
+                                children: [
+                                  listYourEvents(idUser),
+                                  listNextEvents(idUser)
+                                ]),
+                          ),
+                        )
+                      ],
+                    ),
                   )),
                 ))
               ]))),

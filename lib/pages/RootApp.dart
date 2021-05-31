@@ -1,4 +1,4 @@
-import 'CreanteEvents/AddEvent.dart';
+import 'CreateEvents/AddEvent.dart';
 import 'Chat/ChatPage.dart';
 import 'Invites/InvitesPage.dart';
 import 'YourEvents/YourEventsPage.dart';
