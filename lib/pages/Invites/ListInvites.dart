@@ -4,9 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'InviteContent.dart';
 
-var idFunc = 'JIL8fXU6qSO7ilMhyl6U0nbgvQk2';
-
-Widget listInvites() {
+Widget listInvites(idFunc) {
   return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection("Convites")

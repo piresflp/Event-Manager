@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 class MessagesScreen extends StatefulWidget {
   final dynamic chat;
   final dynamic evento;
+  final String idUser;
 
-  MessagesScreen({this.chat, this.evento});
+  const MessagesScreen({this.chat, this.evento, required this.idUser});
 
   @override
   _MessagesScreenState createState() => _MessagesScreenState();
@@ -28,7 +29,10 @@ class _MessagesScreenState extends State<MessagesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
-      body: MessagesContent(evento: widget.evento),
+      body: MessagesContent(
+        evento: widget.evento,
+        idFunc: widget.idUser,
+      ),
     );
   }
 

@@ -2,28 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_search_bar/flutter_search_bar.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'dart:io';
-
-class Evento {
-  final String nome;
-  final String dia;
-  final String hora;
-  final String local;
-  final String tipo;
-  final String idOrganizador;
-  final String imagem;
-
-  const Evento({
-    this.nome = "",
-    this.dia = "",
-    this.hora = "",
-    this.local = "",
-    this.tipo = "",
-    this.idOrganizador = "",
-    this.imagem = "",
-  });
-}
+import 'Evento.dart';
+import 'FirebaseConections.dart';
+import 'package:Even7/utils/Api.dart';
 
 class AddEventInvites extends StatefulWidget {
   final Evento data;
@@ -37,11 +18,29 @@ class AddEventInvites extends StatefulWidget {
 class _AddEventInvitesState extends State<AddEventInvites> {
   var searchBar;
   String filter_list = "funcionarios";
-  String stored_image = "";
+  String stored_image =
+      "https://blog.e-inscricao.com/wp-content/uploads/2017/03/como-manter-a-organizacao-de-um-evento-enquanto-ele-e-realizado.jpeg";
+  String search_bar_filter = "no-filter";
   double distance_center_text = 0;
+
+  String idUser = "";
 
   Evento new_event;
   List<String> invitedUsers = <String>[];
+
+  Future getId() async {
+    String id = await Api.getId();
+    setState(() {
+      idUser = id;
+      FirebaseConections.setUserId(idUser);
+    });
+  }
+
+  @override
+  initState() {
+    super.initState();
+    getId();
+  }
 
   final defaultMap = {
     "date": null,
@@ -64,8 +63,12 @@ class _AddEventInvitesState extends State<AddEventInvites> {
     searchBar = SearchBar(
         inBar: false,
         setState: setState,
-        onSubmitted: print,
-        buildDefaultAppBar: buildAppBar);
+        closeOnSubmit: true,
+        onSubmitted: (value) {
+          search_bar_filter = value;
+        },
+        buildDefaultAppBar: buildAppBar,
+        showClearButton: true);
   }
 
   AppBar buildAppBar(BuildContext context) {
@@ -74,16 +77,9 @@ class _AddEventInvitesState extends State<AddEventInvites> {
         actions: [searchBar.getSearchAction(context)]);
   }
 
-  Stream<QuerySnapshot> getFuncionarios() {
-    var people_list;
-    people_list =
-        FirebaseFirestore.instance.collection("Funcionarios").snapshots();
-    return people_list;
-  }
-
-  Widget get_all_funcs() {
+  Widget get_all_funcs(filter) {
     return StreamBuilder(
-        stream: getFuncionarios(),
+        stream: FirebaseConections.getFuncionarios(filter),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return RichText(
@@ -132,10 +128,9 @@ class _AddEventInvitesState extends State<AddEventInvites> {
         });
   }
 
-  Widget get_all_depts() {
+  Widget get_all_depts(filter) {
     return StreamBuilder(
-        stream:
-            FirebaseFirestore.instance.collection("Departamentos").snapshots(),
+        stream: FirebaseConections.getDepartamentos(filter),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return RichText(
@@ -145,64 +140,79 @@ class _AddEventInvitesState extends State<AddEventInvites> {
             );
           } else {
             return Column(
-                children: List.generate(snapshot.data!.docs.length, (index) {
-              dynamic departament = snapshot.data!.docs[index];
-              bool? _isSelected = false;
-              return StatefulBuilder(builder: (context, setState) {
-                return CheckboxListTile(
-                  title: Container(
-                      child: Row(
-                    children: [
-                      CircleAvatar(
-                          radius: 20,
-                          backgroundImage: NetworkImage(
-                              departament.data()!["urlFoto"],
-                              scale: 0.4)),
-                      SizedBox(width: distance_center_text),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(departament.data()!["nome"]),
-                          Text("Quantidade de equipes: " +
-                              departament.data()!["equipes"].length.toString())
-                        ],
-                      )
-                    ],
-                  )),
-                  value: _isSelected,
-                  onChanged: (newValue) {
-                    if (newValue == true) {
-                      for (int i = 0;
-                          i < departament.data()!["equipes"].length;
-                          i++) {
-                        invitedUsers.add(departament
-                            .data()!["equipes"][i]["funcionarios"][0]
-                            .id);
+                children: List.generate(
+              snapshot.data!.docs.length,
+              (index) {
+                dynamic departament = snapshot.data!.docs[index];
+                bool? _isSelected = false;
+                return StatefulBuilder(builder: (context, setState) {
+                  return CheckboxListTile(
+                    title: Container(
+                        child: Row(
+                      children: [
+                        CircleAvatar(
+                            radius: 20,
+                            backgroundImage: NetworkImage(
+                                departament.data()!["urlFoto"],
+                                scale: 0.4)),
+                        SizedBox(width: distance_center_text),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(departament.data()!["nome"]),
+                            Text("Quantidade de equipes: " +
+                                departament
+                                    .data()!["equipes"]
+                                    .length
+                                    .toString())
+                          ],
+                        )
+                      ],
+                    )),
+                    value: _isSelected,
+                    onChanged: (newValue) {
+                      if (newValue == true) {
+                        for (int i = 0;
+                            i < departament.data()!["equipes"].length;
+                            i++) {
+                          if (departament
+                                  .data()!["equipes"][i]["funcionarios"][0]
+                                  .id !=
+                              idUser) {
+                            invitedUsers.add(departament
+                                .data()!["equipes"][i]["funcionarios"][0]
+                                .id);
+                          }
+                        }
+                      } else {
+                        for (int i = 0;
+                            i < departament.data()!["equipes"].length;
+                            i++) {
+                          if (departament
+                                  .data()!["equipes"][i]["funcionarios"][0]
+                                  .id !=
+                              idUser) {
+                            invitedUsers.remove(departament
+                                .data()!["equipes"][i]["funcionarios"][0]
+                                .id);
+                          }
+                        }
+                        setState(() {
+                          _isSelected = newValue;
+                        });
                       }
-                    } else {
-                      for (int i = 0;
-                          i < departament.data()!["equipes"].length;
-                          i++) {
-                        invitedUsers.remove(departament
-                            .data()!["equipes"][i]["funcionarios"][0]
-                            .id);
-                      }
-                    }
-                    setState(() {
-                      _isSelected = newValue;
-                    });
-                  },
-                );
-              });
-            }));
+                    },
+                  );
+                });
+              },
+            ));
           }
         });
   }
 
-  Widget get_all_teams() {
+  Widget get_all_teams(filter) {
     return StreamBuilder(
-        stream:
-            FirebaseFirestore.instance.collection("Departamentos").snapshots(),
+        stream: FirebaseConections.getTimes(filter),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return RichText(
@@ -246,11 +256,15 @@ class _AddEventInvitesState extends State<AddEventInvites> {
                   onChanged: (newValue) {
                     if (newValue == true) {
                       for (int i = 0; i < team["funcionarios"].length; i++) {
-                        invitedUsers.add(team["funcionarios"][0].id);
+                        if (team["funcionarios"][0].id != idUser) {
+                          invitedUsers.add(team["funcionarios"][0].id);
+                        }
                       }
                     } else {
                       for (int i = 0; i < team["funcionarios"].length; i++) {
-                        invitedUsers.remove(team["funcionarios"][0].id);
+                        if (team["funcionarios"][0].id != idUser) {
+                          invitedUsers.remove(team["funcionarios"][0].id);
+                        }
                       }
                     }
                     setState(() {
@@ -266,26 +280,12 @@ class _AddEventInvitesState extends State<AddEventInvites> {
 
   Widget list(String filter) {
     if (filter == "times") {
-      return get_all_teams();
+      return get_all_teams(search_bar_filter);
     } else if (filter == "departamentos") {
-      return get_all_depts();
+      return get_all_depts(search_bar_filter);
     } else {
-      return get_all_funcs();
+      return get_all_funcs(search_bar_filter);
     }
-  }
-
-  Future uploadImageToFirebase(
-      BuildContext context, String image_path, String image_name) async {
-    File image_file = File(image_path);
-    Reference firebaseStorageRef =
-        FirebaseStorage.instance.ref().child('event_images/$image_name');
-    UploadTask uploadTask = firebaseStorageRef.putFile(image_file);
-    await uploadTask.whenComplete(() async {
-      String url = (await firebaseStorageRef.getDownloadURL()).toString();
-      stored_image = url;
-    }).catchError((onError) {
-      print(onError);
-    });
   }
 
   @override
@@ -304,6 +304,7 @@ class _AddEventInvitesState extends State<AddEventInvites> {
                 InputChip(
                   onPressed: () {
                     filter_list = "funcionarios";
+                    search_bar_filter = "no-filter";
                     (context as Element).reassemble();
                   },
                   avatar: CircleAvatar(
@@ -315,6 +316,7 @@ class _AddEventInvitesState extends State<AddEventInvites> {
                 InputChip(
                   onPressed: () {
                     filter_list = "times";
+                    search_bar_filter = "no-filter";
                     (context as Element).reassemble();
                   },
                   avatar: CircleAvatar(
@@ -326,6 +328,7 @@ class _AddEventInvitesState extends State<AddEventInvites> {
                 InputChip(
                   onPressed: () {
                     filter_list = "departamentos";
+                    search_bar_filter = "no-filter";
                     (context as Element).reassemble();
                   },
                   avatar: CircleAvatar(
@@ -350,7 +353,7 @@ class _AddEventInvitesState extends State<AddEventInvites> {
         child: ElevatedButton(
           onPressed: () async {
             String event_image_id = getRandomString(20);
-            await uploadImageToFirebase(
+            stored_image = await FirebaseConections.uploadImageToFirebase(
                 context, new_event.imagem, event_image_id);
             DocumentReference chatRef =
                 FirebaseFirestore.instance.collection("Chats").doc();
