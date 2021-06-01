@@ -1,18 +1,16 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'Widgets/ListConvidados.dart';
+import 'Widgets/ListConfirmados.dart';
 import 'package:Even7/utils/Api.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:Even7/pages/YourEvents/Widgets/ListNextEvents.dart';
 import 'package:flutter/material.dart';
 import 'Widgets/InformationWidget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:Even7/models/Event.dart';
 
 class EventDetailsPage extends StatefulWidget {
   final Event event;
-  final dynamic reference;
 
-  EventDetailsPage(this.event, this.reference);
+  EventDetailsPage(this.event);
 
   @override
   _EventDetailsPageState createState() => _EventDetailsPageState();
@@ -22,20 +20,27 @@ class _EventDetailsPageState extends State<EventDetailsPage>
     with TickerProviderStateMixin {
   late TabController _tabController;
   String idUser = "";
+  dynamic eventoRef;
 
   Future getId() async {
     String id = await Api.getId();
+
+    await getEvent(widget.event.id);
+    debugPrint(widget.event.id);
     setState(() {
       idUser = id;
     });
   }
 
-  /*Future getEventData() async {
-    Event umEvento = await Api.getEventData(widget.eventId);
+  Future getEvent(idEvento) async {
+    var eventoRefe =
+        await FirebaseFirestore.instance.collection("Eventos").doc(idEvento);
+
+    var eventoF = await eventoRefe.get();
     setState(() {
-      evento = umEvento;
+      eventoRef = eventoRefe;
     });
-  }*/
+  }
 
   @override
   void initState() {
@@ -129,8 +134,8 @@ class _EventDetailsPageState extends State<EventDetailsPage>
                             child: TabBarView(
                                 controller: _tabController,
                                 children: [
-                                  listConvidados(widget.reference),
-                                  listNextEvents(idUser)
+                                  listConvidados(widget.event.id, eventoRef),
+                                  listConfirmados(widget.event.id, eventoRef)
                                 ]),
                           ),
                         )

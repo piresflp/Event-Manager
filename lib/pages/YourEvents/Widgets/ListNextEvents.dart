@@ -39,11 +39,16 @@ Widget eventItem(id, event, index) {
       }
 
       var data = uData.data();
-      Event eventModel = Event(id, data['nome'], data['nomeOrg'], data['dia'],
-          data['hora'], data['local'], data['tipo']);
+      Event eventModel = Event(
+          event['eventoRef'].id,
+          data['nome'],
+          data['nomeOrg'],
+          data['dia'],
+          data['hora'],
+          data['local'],
+          data['tipo']);
 
-      return EventContent(
-          number: index + 1, event: eventModel, reference: event['eventRef']);
+      return EventContent(number: index + 1, event: eventModel);
     },
   );
 }

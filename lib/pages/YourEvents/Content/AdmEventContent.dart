@@ -5,16 +5,13 @@ import 'package:Even7/pages/EventDetails/EventDetailsPage.dart';
 import 'package:Even7/models/Event.dart';
 
 class AdmEventContent extends StatelessWidget {
-  String id = '';
   int number;
   Event event;
-  dynamic reference;
 
   AdmEventContent({
     Key? key,
     this.number = 0,
     required this.event,
-    required this.reference,
   }) : super(key: key);
 
   @override
@@ -48,7 +45,7 @@ class AdmEventContent extends StatelessWidget {
           new GestureDetector(
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => EventDetailsPage(event, reference)));
+                  builder: (context) => EventDetailsPage(event)));
             },
             child: new Container(
               margin: EdgeInsets.only(left: 8),

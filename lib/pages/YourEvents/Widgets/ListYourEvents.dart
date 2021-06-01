@@ -25,9 +25,9 @@ Widget listYourEvents(idFunc) {
                 data['tipo']);
 
             return AdmEventContent(
-                number: index + 1,
-                event: eventModel,
-                reference: data['eventRef']);
+              number: index + 1,
+              event: eventModel,
+            );
           }));
         }
       });
