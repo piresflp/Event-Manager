@@ -83,7 +83,7 @@ class _EventDetailsPageState extends State<EventDetailsPage>
                                   fontSize: 20)),
                         ])),
                 Padding(
-                  padding: EdgeInsets.only(top: 20),
+                  padding: EdgeInsets.all(20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
