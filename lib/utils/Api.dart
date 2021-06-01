@@ -8,6 +8,14 @@ class Api {
     return eventRef.data;
   }
 
+  static Future<dynamic> getFuncionarioById(String idFuncionario) async {
+    DocumentSnapshot funcionarioRef = await FirebaseFirestore.instance
+        .collection("Funcionarios")
+        .doc(idFuncionario)
+        .get();
+    return await funcionarioRef.data();
+  }
+
   static Future getId() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.getString("id");
