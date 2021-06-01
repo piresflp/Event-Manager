@@ -1,3 +1,4 @@
+import 'package:Even7/pages/EditEvent/EditEvent.dart';
 import 'package:Even7/pages/EventDetails/EventDetailsPage.dart';
 import 'package:Even7/theme/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,7 +24,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Even7',
       initialRoute: initialRoute,
-      routes: {'/': (context) => RootApp(), '/login': (context) => LoginPage()},
+      routes: {
+        '/': (context) => RootApp(),
+        '/login': (context) => LoginPage(),
+        EditEvent.routeName: (context) => EditEvent()
+      },
       theme: ThemeData(
         primarySwatch: Colors.lightBlue,
       ),

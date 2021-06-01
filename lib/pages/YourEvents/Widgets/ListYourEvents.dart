@@ -14,7 +14,7 @@ Widget listYourEvents(idFunc) {
               children: List.generate(snapshot.data!.docs.length, (index) {
             dynamic evento = snapshot.data!.docs[index].data()!;
             return AdmEventContent(
-              id: evento["id"],
+              id: snapshot.data!.docs[index].id,
               numero: (index + 1),
               dia: evento["dia"],
               hora: evento["hora"],

@@ -1,4 +1,7 @@
+import 'package:Even7/pages/EditEvent/EditEvent.dart';
+import 'package:Even7/pages/EditEvent/EventArguments.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AdmEventContent extends StatelessWidget {
   final String id;
@@ -58,7 +61,18 @@ class AdmEventContent extends StatelessWidget {
             width: 40,
             decoration:
                 BoxDecoration(shape: BoxShape.circle, color: Color(0xFF49CC96)),
-            child: Icon(Icons.edit_outlined, color: Colors.white),
+            child: GestureDetector(
+              onTap: () async {
+                SharedPreferences preferences =
+                    await SharedPreferences.getInstance();
+                preferences.setString("idEvento", id);
+                Navigator.pushNamed(
+                  context,
+                  EditEvent.routeName,
+                );
+              },
+              child: Icon(Icons.edit_outlined, color: Colors.white),
+            ),
           )
         ],
       ),
