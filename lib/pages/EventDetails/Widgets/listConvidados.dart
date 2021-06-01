@@ -1,29 +1,38 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:Even7/utils/Api.dart';
 import 'package:flutter/material.dart';
 import '../Content/FuncionarioContent.dart';
 
-Widget listConvidados(idFunc) {
+Widget listConvidados(reference) {
   return StreamBuilder(
-      stream: getData(idFunc),
+      stream: FirebaseFirestore.instance
+          .collection("Convites")
+          .where('confirmado', isNull: true)
+          .where('eventoRef', isEqualTo: reference)
+          .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) {
           return Container(child: Text("Nenhum convidado."));
         } else {
           return Column(
               children: List.generate(snapshot.data!.docs.length, (index) {
-            dynamic evento = snapshot.data!.docs[index].data()!;
-            return FuncionarioContent(
-              numero: (index + 1),
-              nome: evento["nome"],
-            );
+            dynamic convite = snapshot.data!.docs[index].data()!;
+            return funcionarioItem(index, convite['idFuncionario']);
+            //funcionarioItem(convite['funcionarioId']);
           }));
         }
       });
 }
 
-Stream<QuerySnapshot> getData(idFunc) {
-  return FirebaseFirestore.instance
-      .collection("Eventos")
-      .where('idOrganizador', isEqualTo: idFunc)
-      .snapshots();
+Widget funcionarioItem(int index, String idFuncionario) {
+  return FutureBuilder(
+      future: Api.getFuncionarioById(idFuncionario),
+      builder: (BuildContext context, AsyncSnapshot<dynamic> uData) {
+        if (!uData.hasData || uData.hasError) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        var funcionario = uData.data;
+        return FuncionarioContent(numero: index + 1, nome: funcionario['nome']);
+      });
 }

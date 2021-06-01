@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
-Widget informationWidget(String type, String data) {
+Widget informationWidget(
+  String type,
+  String data,
+) {
   return Row(
     children: [
       Text(type + ": ",

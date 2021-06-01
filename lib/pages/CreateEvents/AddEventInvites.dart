@@ -364,6 +364,7 @@ class _AddEventInvitesState extends State<AddEventInvites> {
               "dia": new_event.dia,
               "hora": new_event.hora,
               "idOrganizador": new_event.idOrganizador,
+              "nomeOrg": new_event.nomeOrg,
               "local": new_event.local,
               "tipo": new_event.tipo,
               "imagem": stored_image,

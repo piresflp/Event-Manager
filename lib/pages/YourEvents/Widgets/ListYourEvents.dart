@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:Even7/models/Event.dart';
 import '../Content/AdmEventContent.dart';
 
 Widget listYourEvents(idFunc) {
@@ -12,14 +13,21 @@ Widget listYourEvents(idFunc) {
         } else {
           return Column(
               children: List.generate(snapshot.data!.docs.length, (index) {
-            dynamic evento = snapshot.data!.docs[index].data()!;
+            dynamic data = snapshot.data!.docs[index].data()!;
+
+            Event eventModel = Event(
+                snapshot.data!.docs[index].id,
+                data['nome'],
+                data['nomeOrg'],
+                data['dia'],
+                data['hora'],
+                data['local'],
+                data['tipo']);
+
             return AdmEventContent(
-              id: snapshot.data!.docs[index].id,
-              numero: (index + 1),
-              dia: evento["dia"],
-              hora: evento["hora"],
-              nome: evento["nome"],
-            );
+                number: index + 1,
+                event: eventModel,
+                reference: data['eventRef']);
           }));
         }
       });

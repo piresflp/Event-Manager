@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'Widgets/listConvidados.dart';
+import 'Widgets/ListConvidados.dart';
 import 'package:Even7/utils/Api.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:Even7/pages/YourEvents/Widgets/ListNextEvents.dart';
@@ -10,8 +10,9 @@ import 'package:Even7/models/Event.dart';
 
 class EventDetailsPage extends StatefulWidget {
   final Event event;
+  final dynamic reference;
 
-  EventDetailsPage(this.event);
+  EventDetailsPage(this.event, this.reference);
 
   @override
   _EventDetailsPageState createState() => _EventDetailsPageState();
@@ -128,7 +129,7 @@ class _EventDetailsPageState extends State<EventDetailsPage>
                             child: TabBarView(
                                 controller: _tabController,
                                 children: [
-                                  listConvidados(idUser),
+                                  listConvidados(widget.reference),
                                   listNextEvents(idUser)
                                 ]),
                           ),
