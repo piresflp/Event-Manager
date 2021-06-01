@@ -21,24 +21,39 @@ class _EditEventInvitesState extends State<EditEventInvites> {
           child: Container(
         padding: EdgeInsets.fromLTRB(15, 20, 0, 0),
         color: Colors.white,
-        child: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('Convites')
-              .where('eventoRef', isEqualTo: widget.evento.eventoRef)
-              .snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (!snapshot.hasData)
-              return Container(child: Text("No data"));
-            else {
-              var convites = snapshot.data!.docs;
-              return SingleChildScrollView(
-                child: Column(
-                    children: List.generate(convites.length,
-                        (index) => generateInvite(convites[index]))),
-              );
-            }
-          },
+        child: Column(
+          children: [
+            Expanded(
+              child: StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection('Convites')
+                    .where('eventoRef', isEqualTo: widget.evento.eventoRef)
+                    .snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (!snapshot.hasData)
+                    return Container(child: Text("No data"));
+                  else {
+                    var convites = snapshot.data!.docs;
+                    return SingleChildScrollView(
+                      child: Column(
+                          children: List.generate(convites.length,
+                              (index) => generateInvite(convites[index]))),
+                    );
+                  }
+                },
+              ),
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  saveChanges();
+                },
+                child: Text(
+                  "Salvar alterações",
+                  style: TextStyle(color: Colors.white),
+                )),
+            SizedBox(height: 50),
+          ],
         ),
       )),
     );
@@ -87,5 +102,16 @@ class _EditEventInvitesState extends State<EditEventInvites> {
             );
           }
         });
+  }
+
+  void saveChanges() async {
+    var evento = widget.evento;
+    FirebaseFirestore.instance.collection('Eventos').doc(evento.id).update({
+      'dia': evento.dia,
+      'hora': evento.hora,
+      'local': evento.local,
+      'nome': evento.nome,
+      'tipo': evento.tipo
+    });
   }
 }

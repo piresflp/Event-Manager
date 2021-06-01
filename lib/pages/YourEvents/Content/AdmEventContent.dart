@@ -1,5 +1,4 @@
 import 'package:Even7/pages/EditEvent/EditEvent.dart';
-import 'package:Even7/pages/EditEvent/EventArguments.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
