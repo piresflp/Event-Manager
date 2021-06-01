@@ -5,6 +5,7 @@ class Evento {
   final String local;
   final String tipo;
   final String idOrganizador;
+  final String nomeOrg;
   final String imagem;
 
   const Evento({
@@ -14,6 +15,7 @@ class Evento {
     this.local = "",
     this.tipo = "",
     this.idOrganizador = "",
+    this.nomeOrg = "",
     this.imagem = "",
   });
 }

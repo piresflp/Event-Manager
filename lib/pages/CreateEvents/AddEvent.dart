@@ -26,9 +26,15 @@ class _AddEventState extends State<AddEvent> {
       "https://img.freepik.com/free-vector/pattern-geometric-line-circle-abstract-seamless-blue-line_60284-53.jpg?size=626&ext=jpg";
 
   String idUser = "";
+  String nameUser = "";
 
   Future getId() async {
     String id = await Api.getId();
+    var variable = await FirebaseFirestore.instance
+        .collection("Funcionarios")
+        .doc(id)
+        .get();
+    nameUser = await variable.data()!["nome"];
     setState(() {
       idUser = id;
     });
@@ -157,6 +163,7 @@ class _AddEventState extends State<AddEvent> {
                                 local: dropdownLocal,
                                 tipo: dropdownTipo,
                                 idOrganizador: idUser,
+                                nomeOrg: nameUser,
                                 imagem: image_picker);
                             return AddEventInvites(data: new_event);
                           }),
