@@ -46,7 +46,7 @@ class _EditEventInvitesState extends State<EditEventInvites> {
             ),
             ElevatedButton(
                 onPressed: () {
-                  saveChanges();
+                  saveChanges(context);
                 },
                 child: Text(
                   "Salvar alterações",
@@ -104,7 +104,7 @@ class _EditEventInvitesState extends State<EditEventInvites> {
         });
   }
 
-  void saveChanges() async {
+  void saveChanges(context) async {
     var evento = widget.evento;
     FirebaseFirestore.instance.collection('Eventos').doc(evento.id).update({
       'dia': evento.dia,
@@ -113,5 +113,8 @@ class _EditEventInvitesState extends State<EditEventInvites> {
       'nome': evento.nome,
       'tipo': evento.tipo
     });
+
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
   }
 }
